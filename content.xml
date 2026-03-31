@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<content
+    id="production_stations_tab"
+    name="Production Stations"
+    author="Chem O`Dun"
+    version="10000"
+    date="2026-03-30"
+    save="false"
+    sync="false"
+    description="Adds a Production Stations tab to the Property Owned menu. Shows all player-owned stations with production modules. Optionally filters to stations with storage issues (full or empty resources, intermediates, or products).">
+    <!-- German -->
+    <text language="7"
+        name="Production Stations"
+        description="Adds a Production Stations tab to the Property Owned menu. Shows all player-owned stations with production modules. Optionally filters to stations with storage issues (full or empty resources, intermediates, or products)."></text>
+    <!-- French -->
+    <text language="33"
+        name="Production Stations"
+        description="Adds a Production Stations tab to the Property Owned menu. Shows all player-owned stations with production modules. Optionally filters to stations with storage issues (full or empty resources, intermediates, or products)."></text>
+    <!-- Spanish -->
+    <text language="34"
+        name="Production Stations"
+        description="Adds a Production Stations tab to the Property Owned menu. Shows all player-owned stations with production modules. Optionally filters to stations with storage issues (full or empty resources, intermediates, or products)."></text>
+    <!-- Italian -->
+    <text language="39"
+        name="Production Stations"
+        description="Adds a Production Stations tab to the Property Owned menu. Shows all player-owned stations with production modules. Optionally filters to stations with storage issues (full or empty resources, intermediates, or products)."></text>
+    <!-- Czech -->
+    <text language="42"
+        name="Production Stations"
+        description="Adds a Production Stations tab to the Property Owned menu. Shows all player-owned stations with production modules. Optionally filters to stations with storage issues (full or empty resources, intermediates, or products)."></text>
+    <!-- English -->
+    <text language="44"
+        name="Production Stations"
+        description="Adds a Production Stations tab to the Property Owned menu. Shows all player-owned stations with production modules. Optionally filters to stations with storage issues (full or empty resources, intermediates, or products)."></text>
+    <!-- Polish -->
+    <text language="48"
+        name="Production Stations"
+        description="Adds a Production Stations tab to the Property Owned menu. Shows all player-owned stations with production modules. Optionally filters to stations with storage issues (full or empty resources, intermediates, or products)."></text>
+    <!-- German -->
+    <text language="49"
+        name="Production Stations"
+        description="Adds a Production Stations tab to the Property Owned menu. Shows all player-owned stations with production modules. Optionally filters to stations with storage issues (full or empty resources, intermediates, or products)."></text>
+    <!-- Portuguese -->
+    <text language="55"
+        name="Production Stations"
+        description="Adds a Production Stations tab to the Property Owned menu. Shows all player-owned stations with production modules. Optionally filters to stations with storage issues (full or empty resources, intermediates, or products)."></text>
+    <!-- Japanese -->
+    <text language="81"
+        name="Production Stations"
+        description="Adds a Production Stations tab to the Property Owned menu. Shows all player-owned stations with production modules. Optionally filters to stations with storage issues (full or empty resources, intermediates, or products)."></text>
+    <!-- Korean -->
+    <text language="82"
+        name="Production Stations"
+        description="Adds a Production Stations tab to the Property Owned menu. Shows all player-owned stations with production modules. Optionally filters to stations with storage issues (full or empty resources, intermediates, or products)."></text>
+    <!-- Chinese Simplified -->
+    <text language="86"
+        name="Production Stations"
+        description="Adds a Production Stations tab to the Property Owned menu. Shows all player-owned stations with production modules. Optionally filters to stations with storage issues (full or empty resources, intermediates, or products)."></text>
+    <!-- Chinese Traditional -->
+    <text language="88"
+        name="Production Stations"
+        description="Adds a Production Stations tab to the Property Owned menu. Shows all player-owned stations with production modules. Optionally filters to stations with storage issues (full or empty resources, intermediates, or products)."></text>
+    <!-- Turkish -->
+    <text language="90"
+        name="Production Stations"
+        description="Adds a Production Stations tab to the Property Owned menu. Shows all player-owned stations with production modules. Optionally filters to stations with storage issues (full or empty resources, intermediates, or products)."></text>
+    <dependency version="800"></dependency>
+    <dependency id="ws_2042901274" optional="false" name="SirNukes Mod Support APIs" version="195"></dependency>
+    <dependency id="kuerteeUIExtensionsAndHUD" optional="false" name="kuertee UI Extensions and HUD" version="804"></dependency>
+</content>

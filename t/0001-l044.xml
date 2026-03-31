@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- English -->
+<diff>
+    <add sel="/language">
+        <page id="1972092418" title="Production Stations Tab" descr="" voice="no">
+            <!-- mod identity -->
+            <t id="1">Production Stations</t>
+            <t id="2">Shows player-owned stations with production modules and storage status.</t>
+
+            <!-- production overview sub-section header -->
+            <t id="200">Production Overview</t>
+
+            <!-- status / issue labels (shown in sub-row under affected stations) -->
+            <t id="1000">No production stations found</t>
+            <t id="1001">No stations matching current filters</t>
+
+            <!-- options menu title -->
+            <t id="10000">Production Stations</t>
+
+            <!-- options section: display -->
+            <t id="10100">Display Options</t>
+            <t id="10110">Show all production stations</t>
+            <t id="10120">Issue filters (apply when "Show All" is off)</t>
+
+            <!-- options section: intermediate production issues (middle-stage modules) -->
+            <t id="10300">Intermediate Production Issues</t>
+
+            <!-- options section: production issues (final-product modules) -->
+            <t id="10400">Production Issues</t>
+        </page>
+    </add>
+</diff>
