@@ -23,6 +23,12 @@ ffi.cdef [[
   double   GetContainerWareProduction(UniverseID containerid, const char* wareid, bool ignorestate);
   uint32_t GetNumStationModules(UniverseID stationid, bool includeconstructions, bool includewrecks);
   uint32_t GetStationModules(UniverseID* result, uint32_t resultlen, UniverseID stationid, bool includeconstructions, bool includewrecks);
+
+  typedef struct {
+    int major;
+    int minor;
+  } GameVersion;
+  GameVersion  GetGameVersion();
 ]]
 
 -- ── constants ──────────────────────────────────────────────────────────────
@@ -41,6 +47,7 @@ local pst = {
   menuMap              = nil,
   menuMapConfig        = {},
   prodOverviewExpanded = {},
+  isV9                 = C.GetGameVersion().major >= 9,
 }
 
 -- ── debug helpers ──────────────────────────────────────────────────────────
@@ -462,7 +469,7 @@ end
 ---
 --- Expansion of subordinates, module lists, and docked ships is fully handled
 --- here (mirrors vanilla createPropertyRow logic).
-local function createStationRow(instance, ftable, tblOrGroup, component, issues, numdisplayed, isV9)
+local function createStationRow(instance, ftable, tblOrGroup, component, issues, numdisplayed)
   local menu    = pst.menuMap
   local maxicons = menu.infoTableData[instance].maxIcons
   local key     = tostring(component)
@@ -708,7 +715,7 @@ local function createStationRow(instance, ftable, tblOrGroup, component, issues,
         dockedships = menu.sortComponentListHelper(dockedships, menu.propertySorterType)
         local location = GetComponentData(component, "sectorid")
         for _, ds in ipairs(dockedships) do
-          if isV9 then
+          if pst.isV9 then
             numdisplayed = menu.createPropertyRow(instance, ftable, tblOrGroup,
               ds.component, 2, location, nil, true, numdisplayed, menu.propertySorterType)
           else
@@ -740,9 +747,6 @@ function pst.displayTabData(numDisplayed, instance, ftable, infoTableData)
   local issueData = infoTableData.productionStationIssues or {}
   local maxIcons  = menu.infoTableData[instance].maxIcons or 5
 
-  -- Detect 9.00 vs 8.00 by checking for the RowGroup API.
-  local isV9 = type(ftable.addRowGroup) == "function"
-
   -- Section header row.
   local headerRow = ftable:addRow(false, Helper.headerRowProperties)
   headerRow[1]:setColSpan(5 + maxIcons)
@@ -750,7 +754,7 @@ function pst.displayTabData(numDisplayed, instance, ftable, infoTableData)
 
   -- RowGroup (9.00+ only).
   local tblOrGroup = ftable
-  if isV9 then
+  if pst.isV9 then
     tblOrGroup = ftable:addRowGroup({})
   end
 
@@ -759,7 +763,7 @@ function pst.displayTabData(numDisplayed, instance, ftable, infoTableData)
   for _, component in ipairs(stations) do
     local issues = issueData[tostring(component)]
     numDisplayed = createStationRow(instance, ftable, tblOrGroup, component,
-                                    issues, numDisplayed, isV9)
+                                    issues, numDisplayed)
   end
 
   -- Empty section placeholder.
