@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Chinese Traditional -->
+<diff>
+  <add sel="/language">
+    <page id="1972092418" title="Production Stations Tab" descr="" voice="no">
+      <!-- mod identity -->
+      <t id="1">生產站</t>
+      <t id="2">顯示擁有生產模組與儲存狀態的玩家所屬站點。</t>
+
+      <!-- production overview sub-section header -->
+      <t id="200">生產總覽</t>
+
+      <!-- status / issue labels (shown in sub-row under affected stations) -->
+      <t id="1000">未找到生產站</t>
+      <t id="1001">沒有符合目前篩選條件的站點</t>
+
+    </page>
+  </add>
+</diff>

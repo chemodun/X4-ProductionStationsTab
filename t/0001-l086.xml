@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Chinese Simplified -->
+<diff>
+  <add sel="/language">
+    <page id="1972092418" title="Production Stations Tab" descr="" voice="no">
+      <!-- mod identity -->
+      <t id="1">生产站</t>
+      <t id="2">显示拥有生产模块和库存状态的玩家所属站点。</t>
+
+      <!-- production overview sub-section header -->
+      <t id="200">生产概览</t>
+
+      <!-- status / issue labels (shown in sub-row under affected stations) -->
+      <t id="1000">未找到生产站</t>
+      <t id="1001">没有与当前筛选条件匹配的站点</t>
+
+    </page>
+  </add>
+</diff>

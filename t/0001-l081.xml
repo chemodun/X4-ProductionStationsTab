@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Japanese -->
+<diff>
+  <add sel="/language">
+    <page id="1972092418" title="Production Stations Tab" descr="" voice="no">
+      <!-- mod identity -->
+      <t id="1">生産ステーション</t>
+      <t id="2">生産モジュールを持つプレイヤー所有のステーションと保管状況を表示します。</t>
+
+      <!-- production overview sub-section header -->
+      <t id="200">生産概要</t>
+
+      <!-- status / issue labels (shown in sub-row under affected stations) -->
+      <t id="1000">生産ステーションが見つかりません</t>
+      <t id="1001">現在のフィルターに一致するステーションがありません</t>
+
+    </page>
+  </add>
+</diff>

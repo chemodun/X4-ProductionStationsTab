@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Turkish -->
+<diff>
+  <add sel="/language">
+    <page id="1972092418" title="Production Stations Tab" descr="" voice="no">
+      <!-- mod identity -->
+      <t id="1">Üretim İstasyonları</t>
+      <t id="2">Üretim modülleri ve depolama durumu olan oyuncuya ait istasyonları gösterir.</t>
+
+      <!-- production overview sub-section header -->
+      <t id="200">Üretim Genel Bakışı</t>
+
+      <!-- status / issue labels (shown in sub-row under affected stations) -->
+      <t id="1000">Üretim istasyonu bulunamadı</t>
+      <t id="1001">Mevcut filtrelere uyan istasyon yok</t>
+
+    </page>
+  </add>
+</diff>

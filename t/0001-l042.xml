@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Czech -->
+<diff>
+  <add sel="/language">
+    <page id="1972092418" title="Production Stations Tab" descr="" voice="no">
+      <!-- mod identity -->
+      <t id="1">Výrobní stanice</t>
+      <t id="2">Zobrazuje hráčovy stanice s výrobními moduly a stavem skladu.</t>
+
+      <!-- production overview sub-section header -->
+      <t id="200">Přehled výroby</t>
+
+      <!-- status / issue labels (shown in sub-row under affected stations) -->
+      <t id="1000">Nebyly nalezeny žádné výrobní stanice</t>
+      <t id="1001">Žádné stanice neodpovídají aktuálním filtrům</t>
+
+    </page>
+  </add>
+</diff>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- German -->
+<diff>
+  <add sel="/language">
+    <page id="1972092418" title="Production Stations Tab" descr="" voice="no">
+      <!-- mod identity -->
+      <t id="1">Produktionsstationen</t>
+      <t id="2">Zeigt eigene Stationen mit Produktionsmodulen und Lagerstatus an.</t>
+
+      <!-- production overview sub-section header -->
+      <t id="200">Produktionsübersicht</t>
+
+      <!-- status / issue labels (shown in sub-row under affected stations) -->
+      <t id="1000">Keine Produktionsstationen gefunden</t>
+      <t id="1001">Keine Stationen entsprechen den aktuellen Filtern</t>
+
+    </page>
+  </add>
+</diff>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Polish -->
+<diff>
+  <add sel="/language">
+    <page id="1972092418" title="Production Stations Tab" descr="" voice="no">
+      <!-- mod identity -->
+      <t id="1">Stacje produkcyjne</t>
+      <t id="2">Wyświetla stacje gracza z modułami produkcyjnymi i stanem magazynu.</t>
+
+      <!-- production overview sub-section header -->
+      <t id="200">Przegląd produkcji</t>
+
+      <!-- status / issue labels (shown in sub-row under affected stations) -->
+      <t id="1000">Nie znaleziono stacji produkcyjnych</t>
+      <t id="1001">Żadne stacje nie pasują do bieżących filtrów</t>
+
+    </page>
+  </add>
+</diff>

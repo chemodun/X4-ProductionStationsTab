@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Korean -->
+<diff>
+  <add sel="/language">
+    <page id="1972092418" title="Production Stations Tab" descr="" voice="no">
+      <!-- mod identity -->
+      <t id="1">생산 기지</t>
+      <t id="2">생산 모듈과 보관 상태가 있는 플레이어 소유 기지를 표시합니다.</t>
+
+      <!-- production overview sub-section header -->
+      <t id="200">생산 개요</t>
+
+      <!-- status / issue labels (shown in sub-row under affected stations) -->
+      <t id="1000">생산 기지를 찾을 수 없습니다</t>
+      <t id="1001">현재 필터에 맞는 기지가 없습니다</t>
+
+    </page>
+  </add>
+</diff>
