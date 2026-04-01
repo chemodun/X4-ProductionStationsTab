@@ -1,69 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <content
-    id="production_stations_tab"
-    name="Production Stations"
+    id="ws_3697064149"
+    name="Production Stations Tab"
     author="Chem O`Dun"
-    version="10000"
-    date="2026-03-30"
+    version="80001"
+    date="2026-04-01"
     save="false"
     sync="false"
-    description="Adds a Production Stations tab to the Property Owned menu. Shows all player-owned stations with production modules. Optionally filters to stations with storage issues (full or empty resources, intermediates, or products).">
-    <!-- German -->
+    enabled="1"
+    lastupdate="1775049629"
+    description="Adds a [b]Production Stations[/b] tab to the [b]Property Owned[/b] menu in the map (the fleet/property list alongside Ships, Stations, etc.). Lists all player-owned stations that have production modules, with per-station production data and quick-navigation buttons.&#13;&#10;&#13;&#10;[h2][b]Features[/b][/h2]&#13;&#10;[list]&#13;&#10;[*] [b]Production Stations Tab[/b]: A dedicated tab in the Property Owned menu lists all player-owned stations that contain production or processing modules.&#13;&#10;[*] [b]Station icon with issue indicator[/b]: The station class icon is shown next to the station name and tinted in warning colour when any production module has an issue.&#13;&#10;[*] [b]Production Overview sub-section[/b]: Expand a station row, then open the collapsible Production Overview section to see per-ware produced, consumed, and net total amounts per hour.&#13;&#10;[*] [b]Ware icons[/b]: Each ware row shows the ware icon alongside its name for quick visual identification.&#13;&#10;[*] [b]Production issue indicators[/b]: If any production modules for a ware are waiting for resources or waiting for storage, the ware name is highlighted in warning colour and a mouseover tooltip lists the exact issue counts per state.&#13;&#10;[*] [b]Active module count[/b]: The module count column shows how many modules are currently running out of the total installed (e.g. [b]3/5[/b]).&#13;&#10;[*] [b]Ware grouping[/b]: Wares are grouped into [b]Products[/b] (not consumed on-site), [b]Intermediates[/b] (produced and consumed on-site), and [b]Resources[/b] (pure inputs, not produced on-site).&#13;&#10;[*] [b]Logical Station Overview button[/b]: Opens the Logical Station Overview for inventory and build plan details. Tinted in warning colour when the station has production issues.&#13;&#10;[*] [b]Quick-navigation buttons[/b]: [i]Configure Station[/i] and [i]Transaction Log[/i] buttons are available on each station row.&#13;&#10;[/list]&#13;&#10;[h2][b]Requirements[/b][/h2]&#13;&#10;[list]&#13;&#10;[*] [b]X4: Foundations[/b]: Version [b]8.00[/b] or higher.&#13;&#10;[*] [b]UI Extensions and HUD[/b]: Version 8.04 or higher by [url=https://next.nexusmods.com/profile/kuertee?gameId=2659]kuertee[/url].&#13;&#10;[list]&#13;&#10;[*] Available on Nexus Mods: [url=https://www.nexusmods.com/x4foundations/mods/552]UI Extensions and HUD[/url]&#13;&#10;[/list]&#13;&#10;[*] [b]Mod Support APIs[/b]: Version 1.95 or higher by [url=https://next.nexusmods.com/profile/sirnukes?gameId=2659]SirNukes[/url].&#13;&#10;[list]&#13;&#10;[*] Available on Steam: [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2042901274]SirNukes Mod Support APIs[/url]&#13;&#10;[*] Available on Nexus Mods: [url=https://www.nexusmods.com/x4foundations/mods/503]Mod Support APIs[/url]&#13;&#10;[/list]&#13;&#10;[/list]&#13;&#10;[h2][b]Installation[/b][/h2]&#13;&#10;[list]&#13;&#10;[*] [b]Steam Workshop[/b]: [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3697064149]Station Production Overview[/url]&#13;&#10;[*] [b]Nexus Mods[/b]: [url=https://www.nexusmods.com/x4foundations/mods/2052]Station Production Overview[/url]&#13;&#10;[/list]&#13;&#10;[h2][b]Usage[/b][/h2]&#13;&#10;&#13;&#10;Open the map, switch to the [b]Property Owned[/b] panel, and click the [b]Production Stations[/b] tab in the tab strip.&#13;&#10;&#13;&#10;[img]https://raw.githubusercontent.com/chemodun/X4-ProductionStationsTab/refs/heads/main/docs/images/productions_stations_tab.png[/img]&#13;&#10;&#13;&#10;All player-owned stations that contain at least one production or processing module are listed. Each row shows the station name, sector, and three action buttons on the right side.&#13;&#10;&#13;&#10;To see per-ware production data, expand a station row with the [b]+[/b] button, then expand the [b]Production Overview[/b] sub-section.&#13;&#10;&#13;&#10;[h2]Station row[/h2]&#13;&#10;&#13;&#10;Each station row contains:&#13;&#10;&#13;&#10;[img]https://raw.githubusercontent.com/chemodun/X4-ProductionStationsTab/refs/heads/main/docs/images/productions_station_issues.png[/img]&#13;&#10;[list]&#13;&#10;[*] [b]+/-[/b] expand button on the left to reveal modules, subordinate ships, docked ships, and the Production Overview sub-section.&#13;&#10;[*] Station class icon (tinted warning colour if any production module has an issue) and the station name with sector underneath with a tooltip showing the possible production issues.&#13;&#10;[*] [b]Configure Station[/b] button - opens the Station Configuration menu.&#13;&#10;[*] [b]Logical Station Overview[/b] button - opens the Logical Station Overview (tinted warning colour when the station has production issues).&#13;&#10;[*] [b]Transaction Log[/b] button - opens the Transaction Log for this station.&#13;&#10;[/list]&#13;&#10;[h2]Production Overview sub-section[/h2]&#13;&#10;&#13;&#10;After expanding a station row, a collapsible [b]Production Overview[/b] sub-section appears before the module list. Opening it shows a table with one row per ware:&#13;&#10;[list]&#13;&#10;[*] [b]Ware[/b]: icon and name (highlighted in warning colour if there are production issues), with module count ([b]active/total[/b]) on the right.&#13;&#10;[*] [b]Produced[/b]: amount produced per hour.&#13;&#10;[*] [b]Consumed[/b]: amount consumed per hour.&#13;&#10;[*] [b]Total[/b]: net amount per hour.&#13;&#10;[/list]&#13;&#10;Wares are grouped into [b]Products[/b], [b]Intermediates[/b], and [b]Resources[/b].&#13;&#10;&#13;&#10;[img]https://raw.githubusercontent.com/chemodun/X4-ProductionStationsTab/refs/heads/main/docs/images/productions_overview.png[/img]&#13;&#10;&#13;&#10;[h2][b]Credits[/b][/h2]&#13;&#10;[list]&#13;&#10;[*] [b]Author[/b]: Chem O`Dun, on [url=https://next.nexusmods.com/profile/ChemODun/mods?gameId=2659]Nexus Mods[/url] and [url=https://steamcommunity.com/id/chemodun/myworkshopfiles/?appid=392160]Steam Workshop[/url]&#13;&#10;[*] [i]&quot;X4: Foundations&quot;[/i] is a trademark of [url=https://www.egosoft.com]Egosoft[/url].&#13;&#10;[/list]&#13;&#10;[h2][b]Acknowledgements[/b][/h2]&#13;&#10;[list]&#13;&#10;[*] [url=https://www.egosoft.com]EGOSOFT[/url] - for the X series.&#13;&#10;[*] [url=https://next.nexusmods.com/profile/kuertee?gameId=2659]kuertee[/url] - for the [b]UI Extensions and HUD[/b] that makes this extension possible.&#13;&#10;[*] [url=https://next.nexusmods.com/profile/sirnukes?gameId=2659]SirNukes[/url] - for the [b]Mod Support APIs[/b] that power the UI hooks.&#13;&#10;[/list]">
     <text language="7"
-        name="Production Stations"
-        description="Adds a Production Stations tab to the Property Owned menu. Shows all player-owned stations with production modules. Optionally filters to stations with storage issues (full or empty resources, intermediates, or products)."></text>
+        description="Adds a Production Stations tab to the Property Owned menu. Lists all player-owned stations that have production modules, with per-station production data and quick-navigation buttons."></text>
     <!-- French -->
     <text language="33"
-        name="Production Stations"
-        description="Adds a Production Stations tab to the Property Owned menu. Shows all player-owned stations with production modules. Optionally filters to stations with storage issues (full or empty resources, intermediates, or products)."></text>
+        description="Ajoute un onglet Stations de production au menu Propriété du joueur. Liste toutes les stations du joueur ayant des modules de production, avec les données de production par station et des boutons de navigation rapide."></text>
     <!-- Spanish -->
     <text language="34"
-        name="Production Stations"
-        description="Adds a Production Stations tab to the Property Owned menu. Shows all player-owned stations with production modules. Optionally filters to stations with storage issues (full or empty resources, intermediates, or products)."></text>
+        description="Añade una pestaña de Estaciones de producción al menú de Propiedad del jugador. Lista todas las estaciones del jugador con módulos de producción, con datos de producción por estación y botones de navegación rápida."></text>
     <!-- Italian -->
     <text language="39"
-        name="Production Stations"
-        description="Adds a Production Stations tab to the Property Owned menu. Shows all player-owned stations with production modules. Optionally filters to stations with storage issues (full or empty resources, intermediates, or products)."></text>
+        description="Aggiunge una scheda Stazioni di produzione al menu Proprietà del giocatore. Elenca tutte le stazioni del giocatore con moduli di produzione, con dati di produzione per stazione e pulsanti di navigazione rapida."></text>
     <!-- Czech -->
     <text language="42"
-        name="Production Stations"
-        description="Adds a Production Stations tab to the Property Owned menu. Shows all player-owned stations with production modules. Optionally filters to stations with storage issues (full or empty resources, intermediates, or products)."></text>
+        description="Přidává záložku Výrobní stanice do nabídky Vlastní majetek. Zobrazuje seznam všech hráčových stanic s výrobními moduly, s daty výroby pro každou stanici a tlačítky rychlé navigace."></text>
     <!-- English -->
     <text language="44"
-        name="Production Stations"
-        description="Adds a Production Stations tab to the Property Owned menu. Shows all player-owned stations with production modules. Optionally filters to stations with storage issues (full or empty resources, intermediates, or products)."></text>
+        description="Adds a Production Stations tab to the Property Owned menu. Lists all player-owned stations that have production modules, with per-station production data and quick-navigation buttons."></text>
     <!-- Polish -->
     <text language="48"
-        name="Production Stations"
-        description="Adds a Production Stations tab to the Property Owned menu. Shows all player-owned stations with production modules. Optionally filters to stations with storage issues (full or empty resources, intermediates, or products)."></text>
+        description="Dodaje zakładkę Stacje produkcyjne do menu Własność gracza. Wyświetla listę wszystkich stacji gracza posiadających moduły produkcyjne, z danymi produkcji dla każdej stacji i przyciskami szybkiej nawigacji."></text>
     <!-- German -->
     <text language="49"
-        name="Production Stations"
-        description="Adds a Production Stations tab to the Property Owned menu. Shows all player-owned stations with production modules. Optionally filters to stations with storage issues (full or empty resources, intermediates, or products)."></text>
+        description="Fügt einen Tab &quot;Produktionsstationen&quot; zum Menü &quot;Eigenes Eigentum&quot; hinzu. Listet alle eigenen Stationen mit Produktionsmodulen auf, mit stationsweisen Produktionsdaten und Schnellnavigations-Schaltflächen."></text>
     <!-- Portuguese -->
     <text language="55"
-        name="Production Stations"
-        description="Adds a Production Stations tab to the Property Owned menu. Shows all player-owned stations with production modules. Optionally filters to stations with storage issues (full or empty resources, intermediates, or products)."></text>
+        description="Adiciona uma guia Estações de produção ao menu Propriedade do jogador. Lista todas as estações do jogador com módulos de produção, com dados de produção por estação e botões de navegação rápida."></text>
     <!-- Japanese -->
     <text language="81"
-        name="Production Stations"
-        description="Adds a Production Stations tab to the Property Owned menu. Shows all player-owned stations with production modules. Optionally filters to stations with storage issues (full or empty resources, intermediates, or products)."></text>
+        description="「プロパティ所有」メニューに「生産ステーション」タブを追加します。生産モジュールを持つプレイヤー所有のすべてのステーションをリスト表示し、ステーションごとの生産データとクイックナビゲーションボタンを提供します。"></text>
     <!-- Korean -->
     <text language="82"
-        name="Production Stations"
-        description="Adds a Production Stations tab to the Property Owned menu. Shows all player-owned stations with production modules. Optionally filters to stations with storage issues (full or empty resources, intermediates, or products)."></text>
+        description="재산 소유 메뉴에 생산 기지 탭을 추가합니다. 생산 모듈이 있는 플레이어 소유 기지를 모두 나열하며, 기지별 생산 데이터와 빠른 탐색 버튼을 제공합니다."></text>
     <!-- Chinese Simplified -->
     <text language="86"
-        name="Production Stations"
-        description="Adds a Production Stations tab to the Property Owned menu. Shows all player-owned stations with production modules. Optionally filters to stations with storage issues (full or empty resources, intermediates, or products)."></text>
+        description="在「拥有的财产」菜单中添加「生产站」标签页。列出所有拥有生产模块的玩家站点，提供各站点的生产数据和快速导航按钮。"></text>
     <!-- Chinese Traditional -->
     <text language="88"
-        name="Production Stations"
-        description="Adds a Production Stations tab to the Property Owned menu. Shows all player-owned stations with production modules. Optionally filters to stations with storage issues (full or empty resources, intermediates, or products)."></text>
+        description="在「擁有的財產」選單中新增「生產站」分頁。列出所有擁有生產模組的玩家站點，提供各站點的生產資料與快速導覽按鈕。"></text>
     <!-- Turkish -->
     <text language="90"
-        name="Production Stations"
-        description="Adds a Production Stations tab to the Property Owned menu. Shows all player-owned stations with production modules. Optionally filters to stations with storage issues (full or empty resources, intermediates, or products)."></text>
+        description="Sahip Olunan Mülk menüsüne bir Üretim İstasyonları sekmesi ekler. Üretim modüllerine sahip tüm oyuncuya ait istasyonları, istasyon başına üretim verileri ve hızlı gezinme düğmeleriyle listeler."></text>
+    <!-- Ukrainian -->
+    <text language="380"
+        description="Додає вкладку «Виробничі станції» до меню «Власне майно». Відображає список усіх власних станцій гравця з виробничими модулями, дані виробництва по кожній станції та кнопки швидкої навігації."></text>
     <dependency version="800"></dependency>
     <dependency id="ws_2042901274" optional="false" name="SirNukes Mod Support APIs" version="195"></dependency>
     <dependency id="kuerteeUIExtensionsAndHUD" optional="false" name="kuertee UI Extensions and HUD" version="804"></dependency>
