@@ -176,7 +176,6 @@ local function checkStationIssues(component)
   )
 
   -- Mouseover text: grouped by section with a coloured header per section.
-  -- Section titles: mod page 1972092418, IDs 10200/10300/10400.
   -- State IDs: {1001,8431}=Modules without resources, {1001,8432}=Modules waiting for storage
   local warnColor  = Helper.convertColorToText(Color["text_warning"])
   local errColor   = Helper.convertColorToText(Color["text_error"])
@@ -191,13 +190,13 @@ local function checkStationIssues(component)
       lines[#lines + 1] = "  " .. errColor .. ReadText(1001, 8432) .. " (" .. waitStoreCount .. ")" .. resetColor
     end
     if #lines > 0 then
-      parts[#parts + 1] = warnColor .. ReadText(1972092418, titleId) .. ":" .. resetColor
+      parts[#parts + 1] = warnColor .. ReadText(1001, titleId) .. ":" .. resetColor
                        .. "\n" .. table.concat(lines, "\n")
     end
   end
 
-  addSection(10300, counts.intermediate.noResources, counts.intermediate.waitStorage)
-  addSection(10400, counts.production.noResources,   counts.production.waitStorage)
+  addSection(6100, counts.intermediate.noResources, counts.intermediate.waitStorage)
+  addSection(1610, counts.production.noResources,   counts.production.waitStorage)
 
   return {
     hasIssue = hasIssue,
@@ -347,7 +346,7 @@ local function collectProductionWares(station64)
   local moduleCounts = collectModuleCountsForWares(station64)
 
   local function makeEntry(ware)
-    local wareName, _, _, wareIcon = GetWareData(ware, "name", "transport", "istransmutable", "icon")
+    local wareName, wareIcon = GetWareData(ware, "name", "icon")
     local prod    = math.max(0, C.GetContainerWareProduction(station64, ware, false))
     local prodMax = math.max(0, C.GetContainerWareProduction(station64, ware, true))
     local cons    = math.max(0, C.GetContainerWareConsumption(station64, ware, false))
@@ -387,7 +386,7 @@ local function collectProductionWares(station64)
     local consMax = math.max(0, C.GetContainerWareConsumption(station64, w, true))
     if Helper.round(consMax) > 0 then
       local cons = math.max(0, C.GetContainerWareConsumption(station64, w, false))
-      local rName, _, _, rIcon = GetWareData(w, "name", "transport", "istransmutable", "icon")
+      local rName, rIcon = GetWareData(w, "name", "icon")
       table.insert(resources, {
         name         = rName or w,
         icon         = (rIcon and rIcon ~= "") and rIcon or "solid",
@@ -462,18 +461,12 @@ local function createStationRow(instance, ftable, tblOrGroup, component, issues,
   -- Name / colour / sector
   local name, color, bgcolor, font, mouseover, factioncolor =
     menu.getContainerNameAndColors(component, 0, true, false, true)
-  local _, locationtext = GetComponentData(component, "sectorid", "sector")
+  local sectorid, locationtext = GetComponentData(component, "sectorid", "sector")
 
   -- "covered" indicator (mirrors vanilla alertString)
-  local isplayerowned, iscovered, isally = GetComponentData(component, "isplayerowned", "iscovered", "isally")
-  local alertString = ""
-  if isplayerowned and iscovered then
-    alertString = factioncolor .. "\027[menu_hidden]\027X"
-  end
+  local isplayerowned = GetComponentData(component, "isplayerowned")
 
-  -- When station has active issues: tint the name with warning colour
   local hasIssue = issues and issues.hasIssue
-  local nameColor = hasIssue and Color["text_warning"] or color
 
   -- Issue text goes into the mouseover, appended after any vanilla mouseover text
   local issueMouseover = mouseover
@@ -484,7 +477,15 @@ local function createStationRow(instance, ftable, tblOrGroup, component, issues,
     issueMouseover = issueMouseover .. issues.text
   end
 
-  local displayText = alertString .. Helper.convertColorToText(nameColor) .. name .. "\027X"
+  -- When station has issues: tint only the embedded icon in the name with warning colour
+  local displayName = name
+  if hasIssue then
+    local warningColorText  = Helper.convertColorToText(Color["text_warning"])
+    local originalColorText = Helper.convertColorToText(color)
+    displayName = name:gsub("(\027%[[^%]]+%])", warningColorText .. "%1\027X" .. originalColorText, 1)
+  end
+
+  local displayText = Helper.convertColorToText(color) .. displayName .. "\027X"
                    .. "\n" .. (locationtext or "")
 
   -- Main row
@@ -518,8 +519,12 @@ local function createStationRow(instance, ftable, tblOrGroup, component, issues,
   -- Col (maxicons), span 2: Station Configuration button
   local cfgCell = row[maxicons]
   cfgCell:setColSpan(2)
+  local cellWidth = cfgCell:getWidth()
+  local iconSize  = math.min(cellWidth, rowHeight)
+  local iconX     = (cellWidth  - iconSize) / 2
+  local iconY     = (rowHeight  - iconSize) / 2
   cfgCell:createButton({ mouseOverText = ReadText(1001, 7902), scaling = false, active = isplayerowned })
-         :setIcon("mapst_plotmanagement", { scaling = false })
+         :setIcon("mapst_plotmanagement", { scaling = false, width = iconSize, height = iconSize, x = iconX, y = iconY })
   cfgCell.handlers.onClick = function()
     Helper.closeMenuAndOpenNewMenu(pst.menuMap, "StationConfigurationMenu", { 0, 0, comp64 })
     pst.menuMap.cleanup()
@@ -530,7 +535,7 @@ local function createStationRow(instance, ftable, tblOrGroup, component, issues,
   local lsoCell = row[maxicons + 2]
   lsoCell:setColSpan(2)
   lsoCell:createButton({ mouseOverText = ReadText(1001, 7903), scaling = false })
-         :setIcon("stationbuildst_lsov", { scaling = false })
+         :setIcon("stationbuildst_lsov", { scaling = false, width = iconSize, height = iconSize, x = iconX, y = iconY, color = hasIssue and Color["text_warning"] or nil })
   lsoCell.handlers.onClick = function()
     Helper.closeMenuAndOpenNewMenu(pst.menuMap, "StationOverviewMenu", { 0, 0, comp64 })
     pst.menuMap.cleanup()
@@ -541,7 +546,7 @@ local function createStationRow(instance, ftable, tblOrGroup, component, issues,
   local txCell = row[maxicons + 4]
   txCell:setColSpan(2)
   txCell:createButton({ mouseOverText = ReadText(1001, 7702), scaling = false, active = isplayerowned })
-        :setIcon("pi_transactionlog", { scaling = false })
+        :setIcon("pi_transactionlog", { scaling = false, width = iconSize, height = iconSize, x = iconX, y = iconY })
   txCell.handlers.onClick = function()
     Helper.closeMenuAndOpenNewMenu(pst.menuMap, "TransactionLogMenu", { 0, 0, comp64 })
     pst.menuMap.cleanup()
@@ -575,6 +580,7 @@ local function createStationRow(instance, ftable, tblOrGroup, component, issues,
           if #entries == 0 then return end
           local gRow = tblOrGroup:addRow(true, Helper.headerRowProperties)
           gRow[1]:setColSpan(5 + maxicons):createText(label, Helper.headerRowCenteredProperties)
+          local wareIconSize = menu.getShipIconWidth()
           for _, entry in ipairs(entries) do
             local dr = tblOrGroup:addRow(true, { bgColor = Color["row_background_unselectable"] })
             local countStr = ""
@@ -586,12 +592,12 @@ local function createStationRow(instance, ftable, tblOrGroup, component, issues,
               end
             end
             -- Build issue colour and mouseover for the ware cell
-            local hasIssue = entry.noRes > 0 or entry.waitStore > 0
-            local wareName = hasIssue
+            local wareHasIssue = entry.noRes > 0 or entry.waitStore > 0
+            local wareName = wareHasIssue
               and (Helper.convertColorToText(Color["text_warning"]) .. entry.name .. "\027X")
               or entry.name
             local wareMouseover = ""
-            if hasIssue then
+            if wareHasIssue then
               local errColor   = Helper.convertColorToText(Color["text_error"])
               local resetColor = "\027X"
               local lines = {}
@@ -603,9 +609,8 @@ local function createStationRow(instance, ftable, tblOrGroup, component, issues,
               end
               wareMouseover = table.concat(lines, "\n")
             end
-            local iconSize = menu.getShipIconWidth()
-            dr[1]:setColSpan(2):createIcon(entry.icon, { scaling = false, width = iconSize, height = iconSize, mouseOverText = wareMouseover })
-                :setText(wareName, { halign = "left", x = iconSize + Helper.standardTextOffsetx })
+            dr[1]:setColSpan(2):createIcon(entry.icon, { scaling = false, width = wareIconSize, height = wareIconSize, mouseOverText = wareMouseover })
+                :setText(wareName, { halign = "left", x = wareIconSize + Helper.standardTextOffsetx })
                 :setText2(countStr, { halign = "right" })
             dr[3]:createText(entry.prod > 0 and fmt(entry.prod) or "--", { halign = "right" })
             dr[4]:createText(entry.cons > 0 and fmt(entry.cons) or "--", { halign = "right" })
@@ -630,19 +635,18 @@ local function createStationRow(instance, ftable, tblOrGroup, component, issues,
 
     -- Subordinate ships
     if subordinates.hasRendered and subordinatefound then
-      local location = GetComponentData(component, "sectorid")
       if pst.isV9 then
         numdisplayed = menu.createSubordinateSection(
           instance, ftable, tblOrGroup, component,
-          false, true, 0, location,
+          false, true, 0, sectorid,
           numdisplayed, menu.propertySorterType,
-          isplayerowned, isally)
+          true, false)
       else
         numdisplayed = menu.createSubordinateSection(
           instance, ftable, component,
-          false, true, 0, location,
+          false, true, 0, sectorid,
           numdisplayed, menu.propertySorterType,
-          isplayerowned, isally)
+          true, false)
       end
     end
 
@@ -676,14 +680,13 @@ local function createStationRow(instance, ftable, tblOrGroup, component, issues,
 
       if isdockedext then
         dockedships = menu.sortComponentListHelper(dockedships, menu.propertySorterType)
-        local location = GetComponentData(component, "sectorid")
         for _, ds in ipairs(dockedships) do
           if pst.isV9 then
             numdisplayed = menu.createPropertyRow(instance, ftable, tblOrGroup,
-              ds.component, 2, location, nil, true, numdisplayed, menu.propertySorterType)
+              ds.component, 2, sectorid, nil, true, numdisplayed, menu.propertySorterType)
           else
             numdisplayed = menu.createPropertyRow(instance, ftable,
-              ds.component, 2, location, nil, true, numdisplayed, menu.propertySorterType)
+              ds.component, 2, sectorid, nil, true, numdisplayed, menu.propertySorterType)
           end
         end
       end
