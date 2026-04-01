@@ -210,15 +210,16 @@ local function checkStationIssues(component, cfg)
   -- Section titles: mod page 1972092418, IDs 10200/10300/10400.
   -- State IDs: {1001,8431}=Modules without resources, {1001,8432}=Modules waiting for storage
   local warnColor  = Helper.convertColorToText(Color["text_warning"])
+  local errColor   = Helper.convertColorToText(Color["text_error"])
   local resetColor = "\027X"
   local parts = {}
   local function addSection(titleId, noResCount, waitStoreCount)
     local lines = {}
     if noResCount > 0 then
-      lines[#lines + 1] = "  " .. ReadText(1001, 8431) .. " (" .. noResCount .. ")"
+      lines[#lines + 1] = "  " .. errColor .. ReadText(1001, 8431) .. " (" .. noResCount .. ")" .. resetColor
     end
     if waitStoreCount > 0 then
-      lines[#lines + 1] = "  " .. ReadText(1001, 8432) .. " (" .. waitStoreCount .. ")"
+      lines[#lines + 1] = "  " .. errColor .. ReadText(1001, 8432) .. " (" .. waitStoreCount .. ")" .. resetColor
     end
     if #lines > 0 then
       parts[#parts + 1] = warnColor .. ReadText(1972092418, titleId) .. ":" .. resetColor
@@ -633,12 +634,14 @@ local function createStationRow(instance, ftable, tblOrGroup, component, issues,
               or entry.name
             local wareMouseover = ""
             if hasIssue then
+              local errColor   = Helper.convertColorToText(Color["text_error"])
+              local resetColor = "\027X"
               local lines = {}
               if entry.noRes > 0 then
-                lines[#lines + 1] = ReadText(1001, 8431) .. " (" .. entry.noRes .. ")"
+                lines[#lines + 1] = errColor .. ReadText(1001, 8431) .. " (" .. entry.noRes .. ")" .. resetColor
               end
               if entry.waitStore > 0 then
-                lines[#lines + 1] = ReadText(1001, 8432) .. " (" .. entry.waitStore .. ")"
+                lines[#lines + 1] = errColor .. ReadText(1001, 8432) .. " (" .. entry.waitStore .. ")" .. resetColor
               end
               wareMouseover = table.concat(lines, "\n")
             end
