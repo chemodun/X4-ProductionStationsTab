@@ -1,10 +1,7 @@
 -- Production Stations Tab
 -- Adds a "Production Stations" tab to the Property Owned menu (left-panel map menu).
--- Shows player-owned stations that have at least one already-built production or
--- processing module. Optionally filters to stations with storage issues.
---
--- Config is persisted on player.entity.$productionStationsTab (managed by the MD script).
--- Extension Options menu is registered by md/production_stations_tab.xml.
+-- Shows all player-owned stations that have at least one already-built production or
+-- processing module. Stations with production issues are highlighted.
 --
 -- Compatible with X4 8.00 and 9.00, accounting for the RowGroup API added in 9.00.
 
@@ -13,8 +10,6 @@ local C   = ffi.C
 
 ffi.cdef [[
   typedef uint64_t UniverseID;
-
-  UniverseID GetPlayerID(void);
 
   bool IsRealComponentClass(UniverseID componentid, const char* classname);
   bool IsComponentWrecked(UniverseID componentid);
@@ -38,12 +33,9 @@ local PAGE_ID = 1972092418
 local MODE    = "productionStations"
 local TAB_ICON = "stationbuildst_production"
 
-local VAR_ID  = "$productionStationsTab"
-
 -- ── module table ───────────────────────────────────────────────────────────
 
 local pst = {
-  playerId             = nil,
   menuMap              = nil,
   menuMapConfig        = {},
   prodOverviewExpanded = {},
@@ -68,36 +60,6 @@ local function trace(msg)
   end
 end
 
--- ── config helpers ─────────────────────────────────────────────────────────
-
--- MD boolean values arrive in Lua as integers: 1=true, 0=false.
--- Normalize them to real Lua booleans here so all callers can use plain truthiness.
-local BOOL_KEYS = {
-  "showAll",
-  "filterIntNoRes", "filterIntWaitStore",
-  "filterProdNoRes", "filterProdWaitStore",
-}
-
-local function getConfig()
-  local cfg = GetNPCBlackboard(pst.playerId, VAR_ID)
-  if cfg == nil then
-    trace("config is nil")
-    return nil
-  end
-  for _, key in ipairs(BOOL_KEYS) do
-    cfg[key] = (cfg[key] == true or cfg[key] == 1)
-  end
-  return cfg
-end
-
-function pst.onConfigChanged(_, _)
-  local cfg = getConfig()
-  if cfg == nil then return end
-  debugLevel = cfg.debugLevel or "none"
-  debug("Config changed - debugLevel=" .. tostring(debugLevel) ..
-        " showAll=" .. tostring(cfg.showAll))
-end
-
 -- ── production module detection ────────────────────────────────────────────
 
 --- Returns true if the station has at least one already-built production or
@@ -115,9 +77,9 @@ end
 ---   noResources  ("waitingforresources")
 ---   waitStorage  ("waitingforstorage" / "choosingitem")
 ---
---- The stage-counts are used both for hasIssue (respects cfg filters) and for the
---- sub-row text (shown for every non-zero count, regardless of filter state).
-local function checkStationIssues(component, cfg)
+--- The stage-counts drive hasIssue (any non-zero count = issue) and the
+--- mouseover text on the station row.
+local function checkStationIssues(component)
   local station64 = ConvertStringTo64Bit(tostring(component))
 
   local n = tonumber(C.GetNumStationModules(station64, false, false))
@@ -207,10 +169,10 @@ local function checkStationIssues(component, cfg)
   }
 
   local hasIssue = (
-    (cfg.filterIntNoRes    and counts.intermediate.noResources > 0) or
-    (cfg.filterIntWaitStore and counts.intermediate.waitStorage > 0) or
-    (cfg.filterProdNoRes    and counts.production.noResources   > 0) or
-    (cfg.filterProdWaitStore and counts.production.waitStorage  > 0)
+    counts.intermediate.noResources > 0 or
+    counts.intermediate.waitStorage > 0 or
+    counts.production.noResources   > 0 or
+    counts.production.waitStorage   > 0
   )
 
   -- Mouseover text: grouped by section with a coloured header per section.
@@ -309,22 +271,11 @@ function pst.prepareTabData(infoTableData)
     return
   end
 
-  local cfg = getConfig()
-  if cfg == nil then
-    trace("Config nil during prepareTabData - will show nothing")
-    return
-  end
-
-  local showAll = cfg.showAll
-
   for _, component in ipairs(stations) do
-    local issues = checkStationIssues(component, cfg)
+    local issues = checkStationIssues(component)
     if issues ~= nil then
-      -- Station is a production station.
-      if showAll or issues.hasIssue then
-        table.insert(infoTableData.productionStations, component)
-        infoTableData.productionStationIssues[tostring(component)] = issues
-      end
+      table.insert(infoTableData.productionStations, component)
+      infoTableData.productionStationIssues[tostring(component)] = issues
     end
   end
 
@@ -768,13 +719,8 @@ function pst.displayTabData(numDisplayed, instance, ftable, infoTableData)
 
   -- Empty section placeholder.
   if numDisplayed == prevDisplayed then
-    local emptyText = ReadText(PAGE_ID, 1000)
-    local cfg = getConfig()
-    if cfg ~= nil and not cfg.showAll then
-      emptyText = ReadText(PAGE_ID, 1001)
-    end
     local emptyRow = tblOrGroup:addRow(MODE, { interactive = false })
-    emptyRow[2]:setColSpan(4 + maxIcons):createText(emptyText)
+    emptyRow[2]:setColSpan(4 + maxIcons):createText(ReadText(PAGE_ID, 1000))
   end
 
   return { numdisplayed = numDisplayed }
@@ -794,16 +740,11 @@ function pst.Init(menuMap)
     "createPropertyOwned_on_createPropertySection_unassignedships",
     pst.displayTabData)
 
-  RegisterEvent("ProductionStationsTab.ConfigChanged", pst.onConfigChanged)
-
   pst.setupTab()
 end
 
 local function Init()
-  pst.playerId = ConvertStringTo64Bit(tostring(C.GetPlayerID()))
-  pst.onConfigChanged()
-
-  debug("Initialising Production Stations Tab with PlayerID: " .. tostring(pst.playerId))
+  debug("Initialising Production Stations Tab")
 
   local menuMap = Helper.getMenu("MapMenu")
   if menuMap == nil or type(menuMap.registerCallback) ~= "function" then
