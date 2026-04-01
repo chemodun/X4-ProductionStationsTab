@@ -80,6 +80,13 @@ Wares are grouped into [b]Products[/b], [b]Intermediates[/b], and [b]Resources[/
 [/list]
 [h2][b]Changelog[/b][/h2]
 
+[h2][8.00.02] - 2026-04-01[/h2]
+[list]
+[*] [b]Fixed[/b]
+[list]
+[*] Missed text resources reused from other mod
+[/list]
+[/list]
 [h2][8.00.01] - 2026-04-01[/h2]
 [list]
 [*] [b]Added[/b]
