@@ -7,6 +7,17 @@
             <t id="1">Production Stations</t>
             <t id="2">Shows player-owned stations with production modules and storage status.</t>
 
+            <!-- column headers -->
+            <t id="110">Ware</t>
+            <t id="111">Modules</t>
+            <t id="112">Produced</t>
+            <t id="113">Consumed</t>
+            <t id="114">Total</t>
+            <!-- group headers -->
+            <t id="120">Products</t>
+            <t id="121">Intermediates</t>
+            <t id="122">Resources</t>
+
             <!-- production overview sub-section header -->
             <t id="200">Production Overview</t>
 
