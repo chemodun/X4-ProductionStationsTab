@@ -76,6 +76,11 @@ Wares are grouped into **Products**, **Intermediates**, and **Resources**.
 
 ## Changelog
 
+### [8.00.02] - 2026-04-01
+
+- **Fixed**
+  - Missed text resources reused from other mod
+
 ### [8.00.01] - 2026-04-01
 
 - **Added**
