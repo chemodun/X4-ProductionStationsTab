@@ -25,7 +25,7 @@ Adds a **Production Stations** tab to the **Property Owned** menu in the map (th
 
 ## Installation
 
-- **Steam Workshop**: [Station Production Overview](https://steamcommunity.com/sharedfiles/filedetails/?id=)
+- **Steam Workshop**: [Station Production Overview](https://steamcommunity.com/sharedfiles/filedetails/?id=3697064149)
 - **Nexus Mods**: [Station Production Overview](https://www.nexusmods.com/x4foundations/mods/2052)
 
 ## Usage
