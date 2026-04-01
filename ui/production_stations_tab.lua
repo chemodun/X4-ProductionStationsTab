@@ -80,7 +80,7 @@ end
 --- The stage-counts drive hasIssue (any non-zero count = issue) and the
 --- mouseover text on the station row.
 local function checkStationIssues(component)
-  local station64 = ConvertStringTo64Bit(tostring(component))
+  local station64 = ConvertIDTo64Bit(component)
 
   local n = tonumber(C.GetNumStationModules(station64, false, false))
   if n == 0 then return nil end
@@ -424,7 +424,7 @@ local function createStationRow(instance, ftable, tblOrGroup, component, issues,
   local menu    = pst.menuMap
   local maxicons = menu.infoTableData[instance].maxIcons
   local key     = tostring(component)
-  local comp64  = ConvertStringTo64Bit(key)
+  local comp64  = ConvertIDTo64Bit(component)
 
   local subordinates  = menu.infoTableData[instance].subordinates[key]   or {}
   local dockedships   = menu.infoTableData[instance].dockedships[key]    or {}
@@ -621,17 +621,29 @@ local function createStationRow(instance, ftable, tblOrGroup, component, issues,
 
     -- Module list (station builds / constructions)
     if isstationexpandable then
-      menu.createModuleSection(instance, ftable, tblOrGroup, component, 0)
+      if pst.isV9 then
+        menu.createModuleSection(instance, ftable, tblOrGroup, component, 0)
+      else
+        menu.createModuleSection(instance, ftable, component, 0)
+      end
     end
 
     -- Subordinate ships
     if subordinates.hasRendered and subordinatefound then
       local location = GetComponentData(component, "sectorid")
-      numdisplayed = menu.createSubordinateSection(
-        instance, ftable, tblOrGroup, component,
-        false, true, 0, location,
-        numdisplayed, menu.propertySorterType,
-        isplayerowned, isally)
+      if pst.isV9 then
+        numdisplayed = menu.createSubordinateSection(
+          instance, ftable, tblOrGroup, component,
+          false, true, 0, location,
+          numdisplayed, menu.propertySorterType,
+          isplayerowned, isally)
+      else
+        numdisplayed = menu.createSubordinateSection(
+          instance, ftable, component,
+          false, true, 0, location,
+          numdisplayed, menu.propertySorterType,
+          isplayerowned, isally)
+      end
     end
 
     -- Docked ships header + expansion
