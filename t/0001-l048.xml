@@ -7,6 +7,17 @@
       <t id="1">Stacje produkcyjne</t>
       <t id="2">Wyświetla stacje gracza z modułami produkcyjnymi i stanem magazynu.</t>
 
+      <!-- column headers -->
+      <t id="110">Towar</t>
+      <t id="111">Moduły</t>
+      <t id="112">Wyprodukowano</t>
+      <t id="113">Zużyto</t>
+      <t id="114">Łącznie</t>
+      <!-- group headers -->
+      <t id="120">Produkty</t>
+      <t id="121">Półprodukty</t>
+      <t id="122">Zasoby</t>
+
       <!-- production overview sub-section header -->
       <t id="200">Przegląd produkcji</t>
 

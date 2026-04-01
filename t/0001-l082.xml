@@ -7,6 +7,17 @@
       <t id="1">생산 기지</t>
       <t id="2">생산 모듈과 보관 상태가 있는 플레이어 소유 기지를 표시합니다.</t>
 
+      <!-- column headers -->
+      <t id="110">상품</t>
+      <t id="111">모듈</t>
+      <t id="112">생산량</t>
+      <t id="113">소비량</t>
+      <t id="114">합계</t>
+      <!-- group headers -->
+      <t id="120">제품</t>
+      <t id="121">중간재</t>
+      <t id="122">자원</t>
+
       <!-- production overview sub-section header -->
       <t id="200">생산 개요</t>
 

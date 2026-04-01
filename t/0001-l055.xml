@@ -7,6 +7,17 @@
       <t id="1">Estações de produção</t>
       <t id="2">Mostra as estações do jogador com módulos de produção e status de armazenamento.</t>
 
+      <!-- column headers -->
+      <t id="110">Mercadoria</t>
+      <t id="111">Módulos</t>
+      <t id="112">Produzido</t>
+      <t id="113">Consumido</t>
+      <t id="114">Total</t>
+      <!-- group headers -->
+      <t id="120">Produtos</t>
+      <t id="121">Intermediários</t>
+      <t id="122">Recursos</t>
+
       <!-- production overview sub-section header -->
       <t id="200">Visão geral da produção</t>
 

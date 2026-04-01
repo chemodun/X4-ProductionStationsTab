@@ -7,6 +7,17 @@
       <t id="1">生産ステーション</t>
       <t id="2">生産モジュールを持つプレイヤー所有のステーションと保管状況を表示します。</t>
 
+      <!-- column headers -->
+      <t id="110">アイテム</t>
+      <t id="111">モジュール</t>
+      <t id="112">生産量</t>
+      <t id="113">消費量</t>
+      <t id="114">合計</t>
+      <!-- group headers -->
+      <t id="120">製品</t>
+      <t id="121">中間材</t>
+      <t id="122">資源</t>
+
       <!-- production overview sub-section header -->
       <t id="200">生産概要</t>
 

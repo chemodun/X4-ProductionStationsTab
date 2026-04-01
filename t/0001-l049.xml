@@ -7,6 +7,17 @@
       <t id="1">Produktionsstationen</t>
       <t id="2">Zeigt eigene Stationen mit Produktionsmodulen und Lagerstatus an.</t>
 
+      <!-- column headers -->
+      <t id="110">Ware</t>
+      <t id="111">Module</t>
+      <t id="112">Produziert</t>
+      <t id="113">Verbraucht</t>
+      <t id="114">Gesamt</t>
+      <!-- group headers -->
+      <t id="120">Produkte</t>
+      <t id="121">Zwischenprodukte</t>
+      <t id="122">Ressourcen</t>
+
       <!-- production overview sub-section header -->
       <t id="200">Produktionsübersicht</t>
 

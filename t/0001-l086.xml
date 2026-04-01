@@ -7,6 +7,17 @@
       <t id="1">生产站</t>
       <t id="2">显示拥有生产模块和库存状态的玩家所属站点。</t>
 
+      <!-- column headers -->
+      <t id="110">货物</t>
+      <t id="111">模块</t>
+      <t id="112">产量</t>
+      <t id="113">消耗量</t>
+      <t id="114">总计</t>
+      <!-- group headers -->
+      <t id="120">产品</t>
+      <t id="121">中间品</t>
+      <t id="122">资源</t>
+
       <!-- production overview sub-section header -->
       <t id="200">生产概览</t>
 

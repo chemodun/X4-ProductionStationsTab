@@ -571,10 +571,10 @@ local function createStationRow(instance, ftable, tblOrGroup, component, issues,
       if wareData then
         -- Column headers: col 1-2 (span 2) = Ware, col 3 = Produced, col 4 = Consumed, col 5+ span = Total
         local chRow = tblOrGroup:addRow(true, Helper.headerRowProperties)
-        chRow[1]:setColSpan(2):createText(ReadText(1972092416, 110), Helper.headerRowCenteredProperties)
-        chRow[3]:createText(ReadText(1972092416, 112), Helper.headerRowCenteredProperties)
-        chRow[4]:createText(ReadText(1972092416, 113), Helper.headerRowCenteredProperties)
-        chRow[5]:setColSpan(1 + maxicons):createText(ReadText(1972092416, 114), Helper.headerRowCenteredProperties)
+        chRow[1]:setColSpan(2):createText(ReadText(PAGE_ID, 110), Helper.headerRowCenteredProperties)
+        chRow[3]:createText(ReadText(PAGE_ID, 112), Helper.headerRowCenteredProperties)
+        chRow[4]:createText(ReadText(PAGE_ID, 113), Helper.headerRowCenteredProperties)
+        chRow[5]:setColSpan(1 + maxicons):createText(ReadText(PAGE_ID, 114), Helper.headerRowCenteredProperties)
 
         local function renderProdGroup(entries, label)
           if #entries == 0 then return end
@@ -618,9 +618,9 @@ local function createStationRow(instance, ftable, tblOrGroup, component, issues,
           end
         end
 
-        renderProdGroup(wareData.products,      ReadText(1972092416, 120))
-        renderProdGroup(wareData.intermediates, ReadText(1972092416, 121))
-        renderProdGroup(wareData.resources,     ReadText(1972092416, 122))
+        renderProdGroup(wareData.products,      ReadText(PAGE_ID, 120))
+        renderProdGroup(wareData.intermediates, ReadText(PAGE_ID, 121))
+        renderProdGroup(wareData.resources,     ReadText(PAGE_ID, 122))
       end
     end
 

@@ -7,6 +7,17 @@
       <t id="1">Üretim İstasyonları</t>
       <t id="2">Üretim modülleri ve depolama durumu olan oyuncuya ait istasyonları gösterir.</t>
 
+      <!-- column headers -->
+      <t id="110">Mal</t>
+      <t id="111">Modüller</t>
+      <t id="112">Üretilen</t>
+      <t id="113">Tüketilen</t>
+      <t id="114">Toplam</t>
+      <!-- group headers -->
+      <t id="120">Ürünler</t>
+      <t id="121">Ara Ürünler</t>
+      <t id="122">Kaynaklar</t>
+
       <!-- production overview sub-section header -->
       <t id="200">Üretim Genel Bakışı</t>
 
