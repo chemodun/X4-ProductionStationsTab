@@ -114,6 +114,8 @@ local function getProductionStationData(component)
     intermediate = { noResources = {}, waitStorage = {} },
     production   = { noResources = {}, waitStorage = {} },
   }
+  -- Per-ware module counts, reused by collectProductionWares to avoid a second module scan.
+  local moduleCounts = {}
 
   for i = 0, n - 1 do
     local mod = ConvertStringTo64Bit(tostring(moduleBuf[i]))
@@ -123,6 +125,21 @@ local function getProductionStationData(component)
         hasAnyModule = true
         local proddata = GetProductionModuleData(mod)
         local state = proddata and proddata.state
+        -- Accumulate per-ware module counts
+        if proddata and proddata.products then
+          for _, entry in ipairs(proddata.products) do
+            local w = entry.ware
+            if not moduleCounts[w] then
+              moduleCounts[w] = { total = 0, noRes = 0, waitStore = 0 }
+            end
+            moduleCounts[w].total = moduleCounts[w].total + 1
+            if state == "waitingforresources" then
+              moduleCounts[w].noRes = moduleCounts[w].noRes + 1
+            elseif state == "waitingforstorage" or state == "choosingitem" then
+              moduleCounts[w].waitStore = moduleCounts[w].waitStore + 1
+            end
+          end
+        end
         if state and state ~= "empty" and state ~= "producing" then
 
           -- Classify module stage by what it produces
@@ -202,8 +219,9 @@ local function getProductionStationData(component)
   addSection(1610, counts.production.noResources,   counts.production.waitStorage)
 
   return {
-    hasIssue = hasIssue,
-    text     = table.concat(parts, "\n"),
+    hasIssue     = hasIssue,
+    text         = table.concat(parts, "\n"),
+    moduleCounts = moduleCounts,
   }
 end
 
@@ -266,13 +284,12 @@ function pst.prepareTabData(infoTableData)
   end
 
   -- Guard: already prepared this frame.
-  if infoTableData.productionStations ~= nil then
-    trace("productionStations already prepared")
+  if infoTableData.productionStationData ~= nil then
+    trace("productionStationData already prepared")
     return
   end
 
-  infoTableData.productionStations      = {}
-  infoTableData.productionStationIssues = {}
+  infoTableData.productionStationData = {}
 
   local n = tonumber(C.GetNumAllFactionStations("player"))
   if n == 0 then
@@ -300,12 +317,12 @@ function pst.prepareTabData(infoTableData)
   for _, entry in ipairs(entries) do
     local stationData = getProductionStationData(entry.id)
     if stationData ~= nil then
-      table.insert(infoTableData.productionStations, entry.id)
-      infoTableData.productionStationIssues[tostring(entry.id)] = stationData
+      stationData.id = entry.id
+      table.insert(infoTableData.productionStationData, stationData)
     end
   end
 
-  trace("Prepared " .. tostring(#infoTableData.productionStations) .. " production stations")
+  trace("Prepared " .. tostring(#infoTableData.productionStationData) .. " production stations")
 end
 
 -- *** production overview helpers ***
@@ -324,44 +341,10 @@ local function formatProductionTotal(v)
   end
 end
 
---- Scans live (non-wrecked, non-construction) production/processing modules at a
---- station and returns a table mapping ware -> { total, noRes, waitStore }.
-local function collectModuleCountsForWares(station64)
-  local counts = {}
-  local n = tonumber(C.GetNumStationModules(station64, false, false))
-  if n == 0 then return counts end
-  local buf = ffi.new("UniverseID[?]", n)
-  n = tonumber(C.GetStationModules(buf, n, station64, false, false))
-  for i = 0, n - 1 do
-    local mod = ConvertStringTo64Bit(tostring(buf[i]))
-    if IsValidComponent(mod) and not C.IsComponentWrecked(mod) then
-      if C.IsRealComponentClass(mod, "production") or C.IsRealComponentClass(mod, "processingmodule") then
-        local proddata = GetProductionModuleData(mod)
-        if proddata and proddata.products then
-          local state = proddata.state
-          for _, entry in ipairs(proddata.products) do
-            local w = entry.ware
-            if not counts[w] then
-              counts[w] = { total = 0, noRes = 0, waitStore = 0 }
-            end
-            counts[w].total = counts[w].total + 1
-            if state == "waitingforresources" then
-              counts[w].noRes = counts[w].noRes + 1
-            elseif state == "waitingforstorage" or state == "choosingitem" then
-              counts[w].waitStore = counts[w].waitStore + 1
-            end
-          end
-        end
-      end
-    end
-  end
-  return counts
-end
-
 --- Collect live per-ware production/consumption using station-level ware lists.
 --- Returns { products, intermediates, resources } where each is a sorted list of
 --- { name, icon, prod, cons, total, moduleTotal, moduleActive } entries; or nil if no production wares found.
-local function collectProductionWares(station64)
+local function collectProductionWares(station64, moduleCounts)
   local productWares, pureresources, intermediateWares =
     GetComponentData(station64, "availableproducts", "pureresources", "intermediatewares")
   productWares      = productWares      or {}
@@ -370,7 +353,7 @@ local function collectProductionWares(station64)
 
   if #productWares == 0 and #intermediateWares == 0 then return nil end
 
-  local moduleCounts = collectModuleCountsForWares(station64)
+  moduleCounts = moduleCounts or {}
 
   local function makeEntry(ware)
     local wareName, wareIcon = GetWareData(ware, "name", "icon")
@@ -497,7 +480,7 @@ local function createStationRow(instance, ftable, tblOrGroup, component, issues,
 
   -- Issue text goes into the mouseover, appended after any vanilla mouseover text
   local issueMouseover = mouseover
-  if hasIssue and issues.text and issues.text ~= "" then
+  if issues.text and issues.text ~= "" then
     if issueMouseover ~= "" then
       issueMouseover = issueMouseover .. "\n\n"
     end
@@ -594,7 +577,7 @@ local function createStationRow(instance, ftable, tblOrGroup, component, issues,
     poRow[2]:setColSpan(4 + maxicons):createText(ReadText(PAGE_ID, 200))
 
     if poExpanded then
-      local wareData = collectProductionWares(comp64)
+      local wareData = collectProductionWares(comp64, issues and issues.moduleCounts)
       if wareData then
         -- Column headers: col 1-2 (span 2) = Ware, col 3 = Produced, col 4 = Consumed, col 5+ span = Total
         local chRow = tblOrGroup:addRow(true, Helper.headerRowProperties)
@@ -736,9 +719,8 @@ function pst.displayTabData(numDisplayed, instance, ftable, infoTableData)
     return { numdisplayed = numDisplayed }
   end
 
-  local stations  = infoTableData.productionStations      or {}
-  local issueData = infoTableData.productionStationIssues or {}
-  local maxIcons  = menu.infoTableData[instance].maxIcons or 5
+  local stationData = infoTableData.productionStationData or {}
+  local maxIcons    = menu.infoTableData[instance].maxIcons or 5
 
   -- Section header row.
   local headerRow = ftable:addRow(false, Helper.headerRowProperties)
@@ -753,10 +735,9 @@ function pst.displayTabData(numDisplayed, instance, ftable, infoTableData)
 
   local prevDisplayed = numDisplayed
 
-  for _, component in ipairs(stations) do
-    local issues = issueData[tostring(component)]
-    numDisplayed = createStationRow(instance, ftable, tblOrGroup, component,
-                                    issues, numDisplayed)
+  for _, entry in ipairs(stationData) do
+    numDisplayed = createStationRow(instance, ftable, tblOrGroup, entry.id,
+                                    entry, numDisplayed)
   end
 
   -- Empty section placeholder.
