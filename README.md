@@ -76,6 +76,12 @@ Wares are grouped into **Products**, **Intermediates**, and **Resources**.
 
 ## Changelog
 
+### [8.00.03] - 2026-04-02
+
+- **Fixed**
+  - Production overview table used too-small font for ware names and module counts on higher screen resolutions.
+  - Player-owned stations not appearing in the list when moved from the usual tabs, for example when using the `Custom Tabs` mod by Mycu.
+
 ### [8.00.02] - 2026-04-01
 
 - **Fixed**
