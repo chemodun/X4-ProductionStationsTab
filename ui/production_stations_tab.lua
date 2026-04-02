@@ -16,6 +16,8 @@ ffi.cdef [[
 
   double   GetContainerWareConsumption(UniverseID containerid, const char* wareid, bool ignorestate);
   double   GetContainerWareProduction(UniverseID containerid, const char* wareid, bool ignorestate);
+  uint32_t GetAllFactionStations(UniverseID* result, uint32_t resultlen, const char* factionid);
+  uint32_t GetNumAllFactionStations(const char* factionid);
   uint32_t GetNumStationModules(UniverseID stationid, bool includeconstructions, bool includewrecks);
   uint32_t GetStationModules(UniverseID* result, uint32_t resultlen, UniverseID stationid, bool includeconstructions, bool includewrecks);
 
@@ -80,7 +82,7 @@ end
 ---
 --- The stage-counts drive hasIssue (any non-zero count = issue) and the
 --- mouseover text on the station row.
-local function checkStationIssues(component)
+local function getProductionStationData(component)
   local station64 = ConvertIDTo64Bit(component)
 
   local n = tonumber(C.GetNumStationModules(station64, false, false))
@@ -252,14 +254,13 @@ end
 -- ── data preparation callback ──────────────────────────────────────────────
 
 function pst.prepareTabData(infoTableData)
-  local menu = pst.menuMap
   if infoTableData == nil then
     debug("infoTableData is nil")
     return
   end
 
   -- Guard: not the right tab.
-  if menu.propertyMode ~= MODE then
+  if pst.menuMap.propertyMode ~= MODE then
     trace("Not in production stations tab, skipping data preparation")
     return
   end
@@ -273,17 +274,34 @@ function pst.prepareTabData(infoTableData)
   infoTableData.productionStations      = {}
   infoTableData.productionStationIssues = {}
 
-  local stations = infoTableData.stations
-  if stations == nil or #stations == 0 then
-    trace("No stations in infoTableData")
+  local n = tonumber(C.GetNumAllFactionStations("player"))
+  if n == 0 then
+    trace("No player faction stations found")
     return
   end
+  local buf = ffi.new("UniverseID[?]", n)
+  n = tonumber(C.GetAllFactionStations(buf, n, "player"))
 
-  for _, component in ipairs(stations) do
-    local issues = checkStationIssues(component)
-    if issues ~= nil then
-      table.insert(infoTableData.productionStations, component)
-      infoTableData.productionStationIssues[tostring(component)] = issues
+  local entries = {}
+  for i = 0, n - 1 do
+    local object = ConvertStringToLuaID(tostring(buf[i]))
+    local object64 = ConvertIDTo64Bit(object)
+    local name, hull, purpose, uirelation, sector, classid, realclassid, idcode, fleetname =
+      GetComponentData(object, "name", "hullpercent", "primarypurpose", "uirelation", "sector", "classid", "realclassid", "idcode", "fleetname")
+    if pst.menuMap.isObjectValid(object64, classid, realclassid) then
+      table.insert(entries, { id = object, name = name, fleetname = fleetname, objectid = idcode,
+                               classid = classid, realclassid = realclassid, hull = hull,
+                               purpose = purpose, relation = uirelation, sector = sector })
+    end
+  end
+
+  table.sort(entries, pst.menuMap.componentSorter(pst.menuMap.propertySorterType))
+
+  for _, entry in ipairs(entries) do
+    local stationData = getProductionStationData(entry.id)
+    if stationData ~= nil then
+      table.insert(infoTableData.productionStations, entry.id)
+      infoTableData.productionStationIssues[tostring(entry.id)] = stationData
     end
   end
 
