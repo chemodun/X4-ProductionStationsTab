@@ -429,14 +429,14 @@ end
 ---
 --- Expansion of subordinates, module lists, and docked ships is fully handled
 --- here (mirrors vanilla createPropertyRow logic).
-local function createStationRow(instance, ftable, tblOrGroup, component, issues, numdisplayed)
+local function createStationRow(instance, ftable, tblOrGroup, stationId, stationData, numdisplayed)
   local menu    = pst.menuMap
-  local maxicons = menu.infoTableData[instance].maxIcons
-  local key     = tostring(component)
-  local comp64  = ConvertIDTo64Bit(component)
+  local maxIcons = menu.infoTableData[instance].maxIcons
+  local key     = tostring(stationId)
+  local comp64  = ConvertIDTo64Bit(stationId)
 
   local subordinates  = menu.infoTableData[instance].subordinates[key]   or {}
-  local dockedships   = menu.infoTableData[instance].dockedships[key]    or {}
+  local dockedShips   = menu.infoTableData[instance].dockedships[key]    or {}
   local constructions = menu.infoTableData[instance].constructions[key]  or {}
 
   -- Auto-expand commanders / construction contexts (mirrors vanilla)
@@ -447,44 +447,44 @@ local function createStationRow(instance, ftable, tblOrGroup, component, issues,
   end
 
   -- Are there real (non-fleet-unit) subordinates?
-  local subordinatefound = false
+  local subordinateFound = false
   for _, sub in ipairs(subordinates) do
     if (sub.component and menu.infoTableData[instance].fleetUnitSubordinates[tostring(sub.component)] ~= true)
         or sub.fleetunit then
-      subordinatefound = true
+      subordinateFound = true
       break
     end
   end
 
-  local isconstruction    = IsComponentConstruction(component)
-  local isstationexpandable = not isconstruction
+  local isconstruction    = IsComponentConstruction(stationId)
+  local isStationExpandable = not isconstruction
   if isconstruction then
-    isstationexpandable = C.GetNumStationModules(comp64, true, false) > 0
+    isStationExpandable = C.GetNumStationModules(comp64, true, false) > 0
   end
-  local isexpandable = isstationexpandable
-                    or (subordinates.hasRendered and subordinatefound)
-                    or (#dockedships > 0)
+  local isExpandable = isStationExpandable
+                    or (subordinates.hasRendered and subordinateFound)
+                    or (#dockedShips > 0)
                     or (#constructions > 0)
 
   numdisplayed = numdisplayed + 1
 
   -- Name / colour / sector
-  local name, color, bgcolor, font, mouseover, factioncolor =
-    menu.getContainerNameAndColors(component, 0, true, false, true)
-  local sectorid, locationtext = GetComponentData(component, "sectorid", "sector")
+  local name, color, bgColor, font, mouseover, factionColor =
+    menu.getContainerNameAndColors(stationId, 0, true, false, true)
+  local sectorId, locationText = GetComponentData(stationId, "sectorid", "sector")
 
   -- "covered" indicator (mirrors vanilla alertString)
-  local isplayerowned = GetComponentData(component, "isplayerowned")
+  local isPlayerOwned = GetComponentData(stationId, "isplayerowned")
 
-  local hasIssue = issues and issues.hasIssue
+  local hasIssue = stationData and stationData.hasIssue
 
   -- Issue text goes into the mouseover, appended after any vanilla mouseover text
   local issueMouseover = mouseover
-  if issues.text and issues.text ~= "" then
+  if stationData.text and stationData.text ~= "" then
     if issueMouseover ~= "" then
       issueMouseover = issueMouseover .. "\n\n"
     end
-    issueMouseover = issueMouseover .. issues.text
+    issueMouseover = issueMouseover .. stationData.text
   end
 
   -- When station has issues: tint only the embedded icon in the name with warning colour
@@ -496,29 +496,29 @@ local function createStationRow(instance, ftable, tblOrGroup, component, issues,
   end
 
   local displayText = Helper.convertColorToText(color) .. displayName .. "\027X"
-                   .. "\n" .. (locationtext or "")
+                   .. "\n" .. (locationText or "")
 
   -- Main row
-  local row = tblOrGroup:addRow({"property", component, nil, 0}, {
-    bgColor       = bgcolor,
-    multiSelected = menu.isSelectedComponent(component),
+  local row = tblOrGroup:addRow({"property", stationId, nil, 0}, {
+    bgColor       = bgColor,
+    multiSelected = menu.isSelectedComponent(stationId),
   })
-  if menu.isSelectedComponent(component) then
+  if menu.isSelectedComponent(stationId) then
     menu.setrow = row.index
   end
-  if IsSameComponent(component, menu.highlightedbordercomponent) then
+  if IsSameComponent(stationId, menu.highlightedbordercomponent) then
     menu.sethighlightborderrow = row.index
   end
 
   -- Col 1: +/- expand button
-  if isexpandable then
+  if isExpandable then
     row[1]:createButton({ scaling = false })
           :setText(menu.isPropertyExtended(key) and "-" or "+", { scaling = true, halign = "center" })
     row[1].handlers.onClick = function() return menu.buttonExtendProperty(key) end
   end
 
   -- Col 2: two-line text (name / sector), issue details in mouseover
-  row[2]:setColSpan(maxicons - 2):createText(displayText, { font = font, mouseOverText = issueMouseover })
+  row[2]:setColSpan(maxIcons - 2):createText(displayText, { font = font, mouseOverText = issueMouseover })
 
   -- Sync expand-button height to text height
   local rowHeight = row[2]:getMinTextHeight(true)
@@ -527,13 +527,13 @@ local function createStationRow(instance, ftable, tblOrGroup, component, issues,
   end
 
   -- Col (maxicons), span 2: Station Configuration button
-  local cfgCell = row[maxicons]
+  local cfgCell = row[maxIcons]
   cfgCell:setColSpan(2)
   local cellWidth = cfgCell:getWidth()
   local iconSize  = math.min(cellWidth, rowHeight)
   local iconX     = (cellWidth  - iconSize) / 2
   local iconY     = (rowHeight  - iconSize) / 2
-  cfgCell:createButton({ mouseOverText = ReadText(1001, 7902), scaling = false, active = isplayerowned })
+  cfgCell:createButton({ mouseOverText = ReadText(1001, 7902), scaling = false, active = isPlayerOwned })
          :setIcon("mapst_plotmanagement", { scaling = false, width = iconSize, height = iconSize, x = iconX, y = iconY })
   cfgCell.handlers.onClick = function()
     Helper.closeMenuAndOpenNewMenu(pst.menuMap, "StationConfigurationMenu", { 0, 0, comp64 })
@@ -542,7 +542,7 @@ local function createStationRow(instance, ftable, tblOrGroup, component, issues,
   cfgCell.properties.height = rowHeight
 
   -- Col (maxicons+2), span 2: Logical Station Overview button
-  local lsoCell = row[maxicons + 2]
+  local lsoCell = row[maxIcons + 2]
   lsoCell:setColSpan(2)
   lsoCell:createButton({ mouseOverText = ReadText(1001, 7903), scaling = false })
          :setIcon("stationbuildst_lsov", { scaling = false, width = iconSize, height = iconSize, x = iconX, y = iconY, color = hasIssue and Color["text_warning"] or nil })
@@ -553,9 +553,9 @@ local function createStationRow(instance, ftable, tblOrGroup, component, issues,
   lsoCell.properties.height = rowHeight
 
   -- Col (maxicons+4), span 2: Transaction Log button
-  local txCell = row[maxicons + 4]
+  local txCell = row[maxIcons + 4]
   txCell:setColSpan(2)
-  txCell:createButton({ mouseOverText = ReadText(1001, 7702), scaling = false, active = isplayerowned })
+  txCell:createButton({ mouseOverText = ReadText(1001, 7702), scaling = false, active = isPlayerOwned })
         :setIcon("pi_transactionlog", { scaling = false, width = iconSize, height = iconSize, x = iconX, y = iconY })
   txCell.handlers.onClick = function()
     Helper.closeMenuAndOpenNewMenu(pst.menuMap, "TransactionLogMenu", { 0, 0, comp64 })
@@ -574,22 +574,22 @@ local function createStationRow(instance, ftable, tblOrGroup, component, issues,
       menu.noupdate = true
       menu.refreshInfoFrame()
     end
-    poRow[2]:setColSpan(4 + maxicons):createText(ReadText(PAGE_ID, 200))
+    poRow[2]:setColSpan(4 + maxIcons):createText(ReadText(PAGE_ID, 200))
 
     if poExpanded then
-      local wareData = collectProductionWares(comp64, issues and issues.moduleCounts)
+      local wareData = collectProductionWares(comp64, stationData and stationData.moduleCounts)
       if wareData then
         -- Column headers: col 1-2 (span 2) = Ware, col 3 = Produced, col 4 = Consumed, col 5+ span = Total
         local chRow = tblOrGroup:addRow(true, Helper.headerRowProperties)
         chRow[1]:setColSpan(2):createText(ReadText(PAGE_ID, 110), Helper.headerRowCenteredProperties)
         chRow[3]:createText(ReadText(PAGE_ID, 112), Helper.headerRowCenteredProperties)
         chRow[4]:createText(ReadText(PAGE_ID, 113), Helper.headerRowCenteredProperties)
-        chRow[5]:setColSpan(1 + maxicons):createText(ReadText(PAGE_ID, 114), Helper.headerRowCenteredProperties)
+        chRow[5]:setColSpan(1 + maxIcons):createText(ReadText(PAGE_ID, 114), Helper.headerRowCenteredProperties)
 
         local function renderProdGroup(entries, label)
           if #entries == 0 then return end
           local gRow = tblOrGroup:addRow(true, Helper.headerRowProperties)
-          gRow[1]:setColSpan(5 + maxicons):createText(label, Helper.headerRowCenteredProperties)
+          gRow[1]:setColSpan(5 + maxIcons):createText(label, Helper.headerRowCenteredProperties)
           local wareIconSize = menu.getShipIconWidth()
           for _, entry in ipairs(entries) do
             local dr = tblOrGroup:addRow(true, { bgColor = Color["row_background_unselectable"] })
@@ -624,7 +624,7 @@ local function createStationRow(instance, ftable, tblOrGroup, component, issues,
                 :setText2(countStr, { halign = "right", fontsize = pst.mapFontSize })
             dr[3]:createText(entry.prod > 0 and fmt(entry.prod) or "--", { halign = "right" })
             dr[4]:createText(entry.cons > 0 and fmt(entry.cons) or "--", { halign = "right" })
-            dr[5]:setColSpan(1 + maxicons):createText(formatProductionTotal(entry.total), { halign = "right" })
+            dr[5]:setColSpan(1 + maxIcons):createText(formatProductionTotal(entry.total), { halign = "right" })
           end
         end
 
@@ -635,68 +635,68 @@ local function createStationRow(instance, ftable, tblOrGroup, component, issues,
     end
 
     -- Module list (station builds / constructions)
-    if isstationexpandable then
+    if isStationExpandable then
       if pst.isV9 then
-        menu.createModuleSection(instance, ftable, tblOrGroup, component, 0)
+        menu.createModuleSection(instance, ftable, tblOrGroup, stationId, 0)
       else
-        menu.createModuleSection(instance, ftable, component, 0)
+        menu.createModuleSection(instance, ftable, stationId, 0)
       end
     end
 
     -- Subordinate ships
-    if subordinates.hasRendered and subordinatefound then
+    if subordinates.hasRendered and subordinateFound then
       if pst.isV9 then
         numdisplayed = menu.createSubordinateSection(
-          instance, ftable, tblOrGroup, component,
-          false, true, 0, sectorid,
+          instance, ftable, tblOrGroup, stationId,
+          false, true, 0, sectorId,
           numdisplayed, menu.propertySorterType,
           true, false)
       else
         numdisplayed = menu.createSubordinateSection(
-          instance, ftable, component,
-          false, true, 0, sectorid,
+          instance, ftable, stationId,
+          false, true, 0, sectorId,
           numdisplayed, menu.propertySorterType,
           true, false)
       end
     end
 
     -- Docked ships header + expansion
-    if #dockedships > 0 then
-      local isdockedext = menu.isDockedShipsExtended(key, true)
-      if not isdockedext and menu.isDockContext(comp64) then
+    if #dockedShips > 0 then
+      local isDockedExt = menu.isDockedShipsExtended(key, true)
+      if not isDockedExt and menu.isDockContext(comp64) then
         if menu.infoTableMode ~= "propertyowned" then
           menu.extendeddockedships[key] = true
-          isdockedext = true
+          isDockedExt = true
         end
       end
 
-      local drow = tblOrGroup:addRow({"dockedships", component}, {})
-      drow[1]:createButton():setText(isdockedext and "-" or "+", { halign = "center" })
-      drow[1].handlers.onClick = function() return menu.buttonExtendDockedShips(key, true) end
-      drow[2]:setColSpan(3):createText(ReadText(1001, 3265))
+      local dRow = tblOrGroup:addRow({"dockedships", stationId}, {})
+      dRow[1]:createButton():setText(isDockedExt and "-" or "+", { halign = "center" })
+      dRow[1].handlers.onClick = function() return menu.buttonExtendDockedShips(key, true) end
+      dRow[2]:setColSpan(3):createText(ReadText(1001, 3265))
 
       -- Count player-owned docked ships
-      local nplayerdocked = 0
-      for _, ds in ipairs(dockedships) do
+      local nPlayerDocked = 0
+      for _, ds in ipairs(dockedShips) do
         if GetComponentData(ds.component, "isplayerowned") then
-          nplayerdocked = nplayerdocked + 1
+          nPlayerDocked = nPlayerDocked + 1
         end
       end
-      if nplayerdocked > 0 then
-        drow[5]:setColSpan(1 + maxicons)
-               :createText("\027[order_dockat] " .. nplayerdocked,
+      if nPlayerDocked > 0 then
+        dRow[5]:setColSpan(1 + maxIcons)
+               :createText("\027[order_dockat] " .. nPlayerDocked,
                            { halign = "right", color = menu.holomapcolor.playercolor })
       end
 
-      if isdockedext then
-        dockedships = menu.sortComponentListHelper(dockedships, menu.propertySorterType)
-        for _, ds in ipairs(dockedships) do
+      if isDockedExt then
+        dockedShips = menu.sortComponentListHelper(dockedShips, menu.propertySorterType)
+        for _, ds in ipairs(dockedShips) do
           if pst.isV9 then
             numdisplayed = menu.createPropertyRow(instance, ftable, tblOrGroup,
-              ds.component, 2, sectorid, nil, true, numdisplayed, menu.propertySorterType)
+              ds.component, 2, sectorId, nil, true, numdisplayed, menu.propertySorterType)
           else
             numdisplayed = menu.createPropertyRow(instance, ftable,
-              ds.component, 2, sectorid, nil, true, numdisplayed, menu.propertySorterType)
+              ds.component, 2, sectorId, nil, true, numdisplayed, menu.propertySorterType)
           end
         end
       end
