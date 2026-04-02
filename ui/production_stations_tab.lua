@@ -40,6 +40,7 @@ local pst = {
   menuMapConfig        = {},
   prodOverviewExpanded = {},
   isV9                 = C.GetGameVersion().major >= 9,
+  mapFontSize          = Helper.standardFontSize,
 }
 
 -- ── debug helpers ──────────────────────────────────────────────────────────
@@ -251,10 +252,18 @@ end
 -- ── data preparation callback ──────────────────────────────────────────────
 
 function pst.prepareTabData(infoTableData)
+  local menu = pst.menuMap
   if infoTableData == nil then
     debug("infoTableData is nil")
     return
   end
+
+  -- Guard: not the right tab.
+  if menu.propertyMode ~= MODE then
+    trace("Not in production stations tab, skipping data preparation")
+    return
+  end
+
   -- Guard: already prepared this frame.
   if infoTableData.productionStations ~= nil then
     trace("productionStations already prepared")
@@ -610,8 +619,8 @@ local function createStationRow(instance, ftable, tblOrGroup, component, issues,
               wareMouseover = table.concat(lines, "\n")
             end
             dr[1]:setColSpan(2):createIcon(entry.icon, { scaling = false, width = wareIconSize, height = wareIconSize, mouseOverText = wareMouseover })
-                :setText(wareName, { halign = "left", x = wareIconSize + Helper.standardTextOffsetx })
-                :setText2(countStr, { halign = "right" })
+                :setText(wareName, { halign = "left", x = wareIconSize + Helper.standardTextOffsetx, fontsize = pst.mapFontSize })
+                :setText2(countStr, { halign = "right", fontsize = pst.mapFontSize })
             dr[3]:createText(entry.prod > 0 and fmt(entry.prod) or "--", { halign = "right" })
             dr[4]:createText(entry.cons > 0 and fmt(entry.cons) or "--", { halign = "right" })
             dr[5]:setColSpan(1 + maxicons):createText(formatProductionTotal(entry.total), { halign = "right" })
@@ -747,6 +756,7 @@ function pst.Init(menuMap)
   trace("pst.Init called")
   pst.menuMap      = menuMap
   pst.menuMapConfig = menuMap.uix_getConfig()
+  pst.mapFontSize   = Helper.scaleFont(Helper.standardFont, pst.menuMapConfig.mapFontSize)
 
   menuMap.registerCallback(
     "createPropertyOwned_on_add_other_objects_infoTableData",
