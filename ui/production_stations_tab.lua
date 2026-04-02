@@ -28,14 +28,14 @@ ffi.cdef [[
   GameVersion  GetGameVersion();
 ]]
 
--- ── constants ──────────────────────────────────────────────────────────────
+-- *** constants ***
 
 local PAGE_ID = 1972092418
 
 local MODE    = "productionStations"
 local TAB_ICON = "stationbuildst_production"
 
--- ── module table ───────────────────────────────────────────────────────────
+-- *** module table ***
 
 local pst = {
   menuMap              = nil,
@@ -45,7 +45,7 @@ local pst = {
   mapFontSize          = Helper.standardFontSize,
 }
 
--- ── debug helpers ──────────────────────────────────────────────────────────
+-- *** debug helpers ***
 
 local debugLevel = "none"  -- "none" | "debug" | "trace"
 
@@ -63,11 +63,11 @@ local function trace(msg)
   end
 end
 
--- ── production module detection ────────────────────────────────────────────
+-- *** production module detection ***
 
 --- Returns true if the station has at least one already-built production or
 --- processing module (not under construction, not wrecked).
--- ── storage issue detection ────────────────────────────────────────────────
+-- *** storage issue detection ***
 
 --- Returns an issues table for a station, or nil if not a production station.
 ---
@@ -207,7 +207,7 @@ local function getProductionStationData(component)
   }
 end
 
--- ── tab registration ───────────────────────────────────────────────────────
+-- *** tab registration ***
 
 function pst.setupTab()
   local menu = pst.menuMap
@@ -251,7 +251,7 @@ function pst.setupTab()
   end
 end
 
--- ── data preparation callback ──────────────────────────────────────────────
+-- *** data preparation callback ***
 
 function pst.prepareTabData(infoTableData)
   if infoTableData == nil then
@@ -308,7 +308,7 @@ function pst.prepareTabData(infoTableData)
   trace("Prepared " .. tostring(#infoTableData.productionStations) .. " production stations")
 end
 
--- ── production overview helpers ─────────────────────────────────────────────
+-- *** production overview helpers ***
 
 local function fmt(n)
   return ConvertIntegerString(Helper.round(n), true, 0, true, false)
@@ -433,7 +433,7 @@ local function collectProductionWares(station64)
   return { products = products, intermediates = intermediates, resources = resources }
 end
 
--- ── custom station row ──────────────────────────────────────────────────────
+-- *** custom station row ***
 
 --- Creates a compact three-line row for a production station.
 ---
@@ -580,7 +580,7 @@ local function createStationRow(instance, ftable, tblOrGroup, component, issues,
   end
   txCell.properties.height = rowHeight
 
-  -- ── Expansion ────────────────────────────────────────────────────────────
+  -- *** Expansion ***
   if menu.isPropertyExtended(key) then
     -- Production Overview sub-section (expandable, before module list)
     local poExpanded = pst.prodOverviewExpanded[key] or false
@@ -723,7 +723,7 @@ local function createStationRow(instance, ftable, tblOrGroup, component, issues,
   return numdisplayed
 end
 
--- ── display callback ──────────────────────────────────────────────────────
+-- *** display callback ***
 
 function pst.displayTabData(numDisplayed, instance, ftable, infoTableData)
   local menu = pst.menuMap
@@ -768,7 +768,7 @@ function pst.displayTabData(numDisplayed, instance, ftable, infoTableData)
   return { numdisplayed = numDisplayed }
 end
 
--- ── init ────────────────────────────────────────────────────────────────────
+-- *** init ***
 
 function pst.Init(menuMap)
   trace("pst.Init called")
