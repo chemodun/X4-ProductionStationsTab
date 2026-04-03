@@ -61,7 +61,11 @@ After expanding a station row, a collapsible **Production Overview** sub-section
 
 Wares are grouped into **Products**, **Intermediates**, and **Resources**.
 
-![Production Overview](docs/images/productions_overview.png)
+![Production Overview](docs/images/production_overview.png)
+
+On a line with `Production Overview` header in a right-side can be shown an icon with tooltip `Station Production Overview` that allows to quickly open right info panel with the same station and `Station Production Overview` tab active. Will be available only if the appropriate `Station Production Overview` mod is installed.
+
+![Station Production Overview on a right-side panel](docs/images/stations_production_overview.png)
 
 ## Credits
 
@@ -75,6 +79,14 @@ Wares are grouped into **Products**, **Intermediates**, and **Resources**.
 - [SirNukes](https://next.nexusmods.com/profile/sirnukes?gameId=2659) - for the `Mod Support APIs` that power the UI hooks.
 
 ## Changelog
+
+### [8.00.04] - 2026-04-03
+
+- **Added**
+  - Button to quickly open the `Station Production Overview` tab in the right info panel from the `Production Overview` sub-section header in the station row, if the appropriate mod is installed.
+  - Compatibility with future functionality in the `UI Extensions and HUD` mod to achieve a better performance and more reliable way of tracking player-owned stations.
+- **Fixed**
+  - Identifying ware types (Product/Intermediate/Resource). Aligned with the same logic used in the `Station Production Overview` mod for consistency.
 
 ### [8.00.03] - 2026-04-02
 
