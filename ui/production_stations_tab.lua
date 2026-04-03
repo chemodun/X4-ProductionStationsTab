@@ -32,8 +32,9 @@ ffi.cdef [[
 
 local PAGE_ID = 1972092418
 
-local MODE    = "productionStations"
-local TAB_ICON = "stationbuildst_production"
+local MODE         = "productionStations"
+local TAB_ICON     = "stationbuildst_production"
+local SPO_CATEGORY = "chem_station_prod_overview"
 
 -- *** module table ***
 
@@ -43,6 +44,7 @@ local pst = {
   prodOverviewExpanded = {},
   isV9                 = C.GetGameVersion().major >= 9,
   mapFontSize          = Helper.standardFontSize,
+  hasSPO               = nil,   -- nil = not yet checked; true/false cached after first displayTabData
 }
 
 -- *** debug helpers ***
@@ -429,7 +431,7 @@ end
 ---
 --- Expansion of subordinates, module lists, and docked ships is fully handled
 --- here (mirrors vanilla createPropertyRow logic).
-local function createStationRow(instance, ftable, tblOrGroup, stationId, stationData, numdisplayed)
+local function createStationRow(instance, ftable, tblOrGroup, stationId, stationData, hasSPO, numdisplayed)
   local menu    = pst.menuMap
   local maxIcons = menu.infoTableData[instance].maxIcons
   local key     = tostring(stationId)
@@ -574,7 +576,26 @@ local function createStationRow(instance, ftable, tblOrGroup, stationId, station
       menu.noupdate = true
       menu.refreshInfoFrame()
     end
-    poRow[2]:setColSpan(4 + maxIcons):createText(ReadText(PAGE_ID, 200))
+    if hasSPO then
+      poRow[2]:setColSpan(2 + maxIcons):createText(ReadText(PAGE_ID, 200))
+      local poRowH   = poRow[2]:getMinTextHeight(true)
+      local spoCell  = poRow[maxIcons + 4]
+      spoCell:setColSpan(2)
+      local spoCellW  = spoCell:getWidth()
+      local spoIconSz = math.min(spoCellW, poRowH)
+      local spoIconX  = (spoCellW  - spoIconSz) / 2
+      local spoIconY  = (poRowH    - spoIconSz) / 2
+      spoCell:createButton({ mouseOverText = ReadText(1972092416, 1), scaling = false })
+             :setIcon(TAB_ICON, { scaling = false, width = spoIconSz, height = spoIconSz, x = spoIconX, y = spoIconY })
+      spoCell.handlers.onClick = function()
+        menu.infoSubmenuObject = comp64
+        menu.infoMode["right"] = SPO_CATEGORY
+        menu.buttonToggleRightBar("info")
+      end
+      spoCell.properties.height = poRowH
+    else
+      poRow[2]:setColSpan(4 + maxIcons):createText(ReadText(PAGE_ID, 200))
+    end
 
     if poExpanded then
       local wareData = collectProductionWares(comp64, stationData and stationData.moduleCounts)
@@ -719,6 +740,20 @@ function pst.displayTabData(numDisplayed, instance, ftable, infoTableData)
     return { numdisplayed = numDisplayed }
   end
 
+  -- Detect once whether the SPO info tab is registered; cache result in pst.hasSPO.
+  if pst.hasSPO == nil then
+    pst.hasSPO = false
+    local cats = pst.menuMapConfig.infoCategories
+    if cats then
+      for _, cat in ipairs(cats) do
+        if cat.category == SPO_CATEGORY then
+          pst.hasSPO = true
+          break
+        end
+      end
+    end
+  end
+
   local stationData = infoTableData.productionStationData or {}
   local maxIcons    = menu.infoTableData[instance].maxIcons or 5
 
@@ -737,7 +772,7 @@ function pst.displayTabData(numDisplayed, instance, ftable, infoTableData)
 
   for _, entry in ipairs(stationData) do
     numDisplayed = createStationRow(instance, ftable, tblOrGroup, entry.id,
-                                    entry, numDisplayed)
+                                    entry, pst.hasSPO, numDisplayed)
   end
 
   -- Empty section placeholder.
