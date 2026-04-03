@@ -287,7 +287,23 @@ function pst.setupTab()
   end
 end
 
--- *** data preparation callback ***
+-- *** data preparation callbacks ***
+
+--- Fired by kuertee UI Extensions for every player object inside the
+--- createPropertyOwned loop (already sorted by the vanilla sorter).
+--- Appends one entry to productionStationData for each production station.
+function pst.onEveryPlayerObject(infoTableData, entry, propertyMode)
+  if propertyMode ~= MODE then return end
+  if not Helper.isComponentClass(entry.realclassid, "station") then return end
+  if infoTableData.productionStationData == nil then
+    infoTableData.productionStationData = {}
+  end
+  local stationData = getProductionStationData(entry.id)
+  if stationData ~= nil then
+    stationData.id = entry.id
+    table.insert(infoTableData.productionStationData, stationData)
+  end
+end
 
 function pst.prepareTabData(infoTableData)
   if infoTableData == nil then
@@ -822,6 +838,9 @@ function pst.Init(menuMap)
   pst.menuMapConfig = menuMap.uix_getConfig()
   pst.mapFontSize   = Helper.scaleFont(Helper.standardFont, pst.menuMapConfig.mapFontSize)
 
+  menuMap.registerCallback(
+    "createPropertyOwned_on_every_playerobject",
+    pst.onEveryPlayerObject)
   menuMap.registerCallback(
     "createPropertyOwned_on_add_other_objects_infoTableData",
     pst.prepareTabData)
