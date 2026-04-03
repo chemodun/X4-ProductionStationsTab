@@ -65,7 +65,11 @@ After expanding a station row, a collapsible [b]Production Overview[/b] sub-sect
 [/list]
 Wares are grouped into [b]Products[/b], [b]Intermediates[/b], and [b]Resources[/b].
 
-[spoiler][img]https://raw.githubusercontent.com/chemodun/X4-ProductionStationsTab/refs/heads/main/docs/images/productions_overview.png[/img][/spoiler]
+[spoiler][img]https://raw.githubusercontent.com/chemodun/X4-ProductionStationsTab/refs/heads/main/docs/images/production_overview.png[/img][/spoiler]
+
+On a line with [b]Production Overview[/b] header in a right-side can be shown an icon with tooltip [b]Station Production Overview[/b] that allows to quickly open right info panel with the same station and [b]Station Production Overview[/b] tab active. Will be available only if the appropriate [b]Station Production Overview[/b] mod is installed.
+
+[spoiler][img]https://raw.githubusercontent.com/chemodun/X4-ProductionStationsTab/refs/heads/main/docs/images/stations_production_overview.png[/img][/spoiler]
 
 [size=130][u]Credits[/u][/size]
 [list]
@@ -80,6 +84,18 @@ Wares are grouped into [b]Products[/b], [b]Intermediates[/b], and [b]Resources[/
 [/list]
 [size=130][u]Changelog[/u][/size]
 
+[size=125][u][8.00.04] - 2026-04-03[/u][/size]
+[list]
+[*] [b]Added[/b]
+[list]
+[*] Button to quickly open the [b]Station Production Overview[/b] tab in the right info panel from the [b]Production Overview[/b] sub-section header in the station row, if the appropriate mod is installed.
+[*] Compatibility with future functionality in the [b]UI Extensions and HUD[/b] mod to achieve a better performance and more reliable way of tracking player-owned stations.
+[/list]
+[*] [b]Fixed[/b]
+[list]
+[*] Identifying ware types (Product/Intermediate/Resource). Aligned with the same logic used in the [b]Station Production Overview[/b] mod for consistency.
+[/list]
+[/list]
 [size=125][u][8.00.03] - 2026-04-02[/u][/size]
 [list]
 [*] [b]Fixed[/b]
