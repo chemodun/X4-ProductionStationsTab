@@ -627,7 +627,7 @@ local function createStationRow(instance, ftable, tblOrGroup, stationId, station
       local spoIconSz = math.min(spoCellW, poRowH)
       local spoIconX  = (spoCellW  - spoIconSz) / 2
       local spoIconY  = (poRowH    - spoIconSz) / 2
-      spoCell:createButton({ mouseOverText = ReadText(1972092416, 1), scaling = false })
+      spoCell:createButton({ mouseOverText = ReadText(1972092416, 2), scaling = false })
              :setIcon(TAB_ICON, { scaling = false, width = spoIconSz, height = spoIconSz, x = spoIconX, y = spoIconY })
       spoCell.handlers.onClick = function()
         menu.infoSubmenuObject = comp64
