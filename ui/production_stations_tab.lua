@@ -616,7 +616,11 @@ local function createStationRow(instance, ftable, tblOrGroup, stationId, station
       spoCell.handlers.onClick = function()
         menu.infoSubmenuObject = comp64
         menu.infoMode["right"] = SPO_CATEGORY
-        menu.buttonToggleRightBar("info")
+        if menu.searchTableMode == "info" then
+          menu.refreshInfoFrame2()
+        else
+          menu.buttonToggleRightBar("info")
+        end
       end
       spoCell.properties.height = poRowH
     else
