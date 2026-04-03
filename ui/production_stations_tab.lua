@@ -118,6 +118,8 @@ local function getProductionStationData(component)
   }
   -- Per-ware module counts, reused by collectProductionWares to avoid a second module scan.
   local moduleCounts = {}
+  -- Input wares consumed by production modules (used to classify products vs intermediates).
+  local resourceWares = {}
 
   for i = 0, n - 1 do
     local mod = ConvertStringTo64Bit(tostring(moduleBuf[i]))
@@ -139,6 +141,19 @@ local function getProductionStationData(component)
               moduleCounts[w].noRes = moduleCounts[w].noRes + 1
             elseif state == "waitingforstorage" or state == "choosingitem" then
               moduleCounts[w].waitStore = moduleCounts[w].waitStore + 1
+            end
+          end
+        end
+        -- Accumulate resource (input) wares from static macro data (same source as SPO)
+        -- so classification is state-independent (proddata.resources is empty when idle).
+        local macro = GetComponentData(mod, "macro")
+        if macro then
+          local mData = GetLibraryEntry(GetMacroData(macro, "infolibrary"), macro)
+          if mData and mData.products then
+            for _, pEntry in ipairs(mData.products) do
+              for _, res in ipairs(pEntry.resources or {}) do
+                resourceWares[res.ware] = true
+              end
             end
           end
         end
@@ -224,6 +239,7 @@ local function getProductionStationData(component)
     hasIssue     = hasIssue,
     text         = table.concat(parts, "\n"),
     moduleCounts = moduleCounts,
+    resourceWares = resourceWares,
   }
 end
 
@@ -346,16 +362,26 @@ end
 --- Collect live per-ware production/consumption using station-level ware lists.
 --- Returns { products, intermediates, resources } where each is a sorted list of
 --- { name, icon, prod, cons, total, moduleTotal, moduleActive } entries; or nil if no production wares found.
-local function collectProductionWares(station64, moduleCounts)
-  local productWares, pureresources, intermediateWares =
-    GetComponentData(station64, "availableproducts", "pureresources", "intermediatewares")
-  productWares      = productWares      or {}
-  pureresources     = pureresources     or {}
-  intermediateWares = intermediateWares or {}
+--- Classification mirrors SPO: produced wares that are also resource inputs become Intermediates;
+--- produced wares that are not resource inputs become Products; input-only wares become Resources.
+local function collectProductionWares(station64, moduleCounts, resourceWares)
+  moduleCounts  = moduleCounts  or {}
+  resourceWares = resourceWares or {}
 
-  if #productWares == 0 and #intermediateWares == 0 then return nil end
+  -- Fallback to engine lists when no module scan data is available.
+  if next(moduleCounts) == nil then
+    local productWares, pureresources, intermediateWares =
+      GetComponentData(station64, "availableproducts", "pureresources", "intermediatewares")
+    productWares      = productWares      or {}
+    pureresources     = pureresources     or {}
+    intermediateWares = intermediateWares or {}
+    for _, w in ipairs(productWares)      do moduleCounts[w]  = { total = 0, noRes = 0, waitStore = 0 } end
+    for _, w in ipairs(intermediateWares) do moduleCounts[w]  = { total = 0, noRes = 0, waitStore = 0 } end
+    for _, w in ipairs(pureresources)     do resourceWares[w] = true end
+    for _, w in ipairs(intermediateWares) do resourceWares[w] = true end
+  end
 
-  moduleCounts = moduleCounts or {}
+  if next(moduleCounts) == nil and next(resourceWares) == nil then return nil end
 
   local function makeEntry(ware)
     local wareName, wareIcon = GetWareData(ware, "name", "icon")
@@ -382,25 +408,25 @@ local function collectProductionWares(station64, moduleCounts)
   end
 
   local products = {}
-  for _, w in ipairs(productWares) do
-    table.insert(products, makeEntry(w))
-  end
-  table.sort(products, function(a, b) return a.name < b.name end)
-
   local intermediates = {}
-  for _, w in ipairs(intermediateWares) do
-    table.insert(intermediates, makeEntry(w))
+  local resources = {}
+
+  for ware, _ in pairs(moduleCounts) do
+    if resourceWares[ware] then
+      table.insert(intermediates, makeEntry(ware))
+    else
+      table.insert(products, makeEntry(ware))
+    end
   end
+  table.sort(products,     function(a, b) return a.name < b.name end)
   table.sort(intermediates, function(a, b) return a.name < b.name end)
 
-  local resources = {}
-  for _, w in ipairs(pureresources) do
-    local consMax = math.max(0, C.GetContainerWareConsumption(station64, w, true))
-    if Helper.round(consMax) > 0 then
-      local cons = math.max(0, C.GetContainerWareConsumption(station64, w, false))
-      local rName, rIcon = GetWareData(w, "name", "icon")
+  for ware, _ in pairs(resourceWares) do
+    if not moduleCounts[ware] then
+      local cons = math.max(0, C.GetContainerWareConsumption(station64, ware, false))
+      local rName, rIcon = GetWareData(ware, "name", "icon")
       table.insert(resources, {
-        name         = rName or w,
+        name         = rName or ware,
         icon         = (rIcon and rIcon ~= "") and rIcon or "solid",
         prod         = 0,
         cons         = Helper.round(cons),
@@ -598,7 +624,7 @@ local function createStationRow(instance, ftable, tblOrGroup, stationId, station
     end
 
     if poExpanded then
-      local wareData = collectProductionWares(comp64, stationData and stationData.moduleCounts)
+      local wareData = collectProductionWares(comp64, stationData and stationData.moduleCounts, stationData and stationData.resourceWares)
       if wareData then
         -- Column headers: col 1-2 (span 2) = Ware, col 3 = Produced, col 4 = Consumed, col 5+ span = Total
         local chRow = tblOrGroup:addRow(true, Helper.headerRowProperties)
