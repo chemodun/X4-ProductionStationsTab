@@ -13,12 +13,13 @@ Adds a **Production Stations** tab to the **Property Owned** menu in the map (th
 - **Ware grouping**: Wares are grouped into **Products** (not consumed on-site), **Intermediates** (produced and consumed on-site), and **Resources** (pure inputs, not produced on-site).
 - **Logical Station Overview button**: Opens the Logical Station Overview for inventory and build plan details. Tinted in warning colour when the station has production issues.
 - **Quick-navigation buttons**: *Configure Station* and *Transaction Log* buttons are available on each station row.
+- **Supports the 9.00 beta**: Compatible with both 8.00 and 9.00 versions of the game.
 
 ## Requirements
 
-- **X4: Foundations**: Version **8.00** or higher.
-- **UI Extensions and HUD**: Version 8.04 or higher by [kuertee](https://next.nexusmods.com/profile/kuertee?gameId=2659).
+- **X4: Foundations**: Version **8.00HF4** or higher and **UI Extensions and HUD**: Version **v8.0.4.x** or higher by [kuertee](https://next.nexusmods.com/profile/kuertee?gameId=2659).
   - Available on Nexus Mods: [UI Extensions and HUD](https://www.nexusmods.com/x4foundations/mods/552)
+- **X4: Foundations**: Version **9.00 beta 3** or higher and **UI Extensions and HUD**: Version **v9.0.0.0.3** or higher by [kuertee](https://next.nexusmods.com/profile/kuertee?gameId=2659).
 - **Mod Support APIs**: Version 1.95 or higher by [SirNukes](https://next.nexusmods.com/profile/sirnukes?gameId=2659).
   - Available on Steam: [SirNukes Mod Support APIs](https://steamcommunity.com/sharedfiles/filedetails/?id=2042901274)
   - Available on Nexus Mods: [Mod Support APIs](https://www.nexusmods.com/x4foundations/mods/503)
