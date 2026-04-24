@@ -49,6 +49,9 @@ local pst = {
   ignoreNoResources    = false, -- when true, noRes modules are not highlighted as issues
   ignoreWaitStore      = false, -- when true, waitStore modules are not highlighted as issues
   playerId             = nil,   -- set in pst.Init(); used to read MD blackboard config
+  -- Data cache for throttled refresh (same pattern as SPO)
+  dataRefreshInterval  = 3,    -- recompute every N render calls; configured via MD options slider
+  dataCache            = {},   -- key: station-id string → { stationData, turnCounter }
 }
 
 -- *** debug helpers ***
@@ -61,8 +64,12 @@ local function pstOnConfigChanged()
   if pst.playerId == nil then return end
   local cfg = GetNPCBlackboard(pst.playerId, "$productionStationsTab")
   if cfg then
+    if cfg.dataRefreshInterval then
+      pst.dataRefreshInterval = math.max(1, math.min(10, tonumber(cfg.dataRefreshInterval) or 3))
+    end
     pst.ignoreNoResources = cfg.ignoreNoResources == 1
     pst.ignoreWaitStore   = cfg.ignoreWaitStore   == 1
+    pst.dataCache = {} -- invalidate cache so next render reflects new settings
   end
 end
 
@@ -101,6 +108,14 @@ end
 --- mouseover text on the station row.
 local function getProductionStationData(component)
   local station64 = ConvertIDTo64Bit(component)
+
+  -- *** Cache check — reuse expensive data for dataRefreshInterval turns ***
+  local cacheKey = tostring(station64)
+  local cached   = pst.dataCache[cacheKey]
+  if cached and cached.turnCounter < pst.dataRefreshInterval then
+    cached.turnCounter = cached.turnCounter + 1
+    return cached.stationData
+  end
 
   local n = tonumber(C.GetNumStationModules(station64, false, false))
   if n == 0 then return nil end
@@ -250,13 +265,15 @@ local function getProductionStationData(component)
   addSection(6100, counts.intermediate.noResources, counts.intermediate.waitStorage)
   addSection(1610, counts.production.noResources,   counts.production.waitStorage)
 
-  return {
+  local result = {
     hasIssue      = hasIssue,
     text          = table.concat(parts, "\n"),
     moduleCounts  = moduleCounts,
     resourceWares = resourceWares,
     counts        = counts,
   }
+  pst.dataCache[cacheKey] = { stationData = result, turnCounter = 1 }
+  return result
 end
 
 -- *** tab registration ***

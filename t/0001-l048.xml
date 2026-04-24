@@ -27,6 +27,8 @@
 
       <!-- settings page labels -->
       <t id="90001">Karta Stacji produkcyjnych</t>
+      <t id="90100">Wydajność</t>
+      <t id="90101">Interwał odświeżania danych:\n ile tyknięć UI dane produkcji są ponownie używane \(mniejszy = bardziej responsywny, większy = mniejsze użycie CPU\)</t>
       <t id="90200">Obsługa błędów:</t>
       <t id="90220">Ignoruj błędy:</t>
 

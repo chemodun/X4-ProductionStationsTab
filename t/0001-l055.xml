@@ -27,6 +27,8 @@
 
       <!-- settings page labels -->
       <t id="90001">Aba Estações de produção</t>
+      <t id="90100">Desempenho</t>
+      <t id="90101">Intervalo de atualização de dados:\n quantos tiques de UI os dados de produção em cache são reutilizados \(menor = mais responsivo, maior = menor uso de CPU\)</t>
       <t id="90200">Tratamento de erros:</t>
       <t id="90220">Ignorar erros:</t>
 

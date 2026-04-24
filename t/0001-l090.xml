@@ -27,6 +27,8 @@
 
       <!-- settings page labels -->
       <t id="90001">Üretim İstasyonları Sekmesi</t>
+      <t id="90100">Performans</t>
+      <t id="90101">Veri Yenileme Aralığı:\n önbelleğe alınmış üretim verilerinin yeniden kullanılacağı UI tik sayısı \(düşük = daha duyarlı, yüksek = daha az CPU kullanımı\)</t>
       <t id="90200">Hata İşleme:</t>
       <t id="90220">Hataları yoksay:</t>
 

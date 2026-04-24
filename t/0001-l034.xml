@@ -27,6 +27,8 @@
 
       <!-- settings page labels -->
       <t id="90001">Pestaña Estaciones de producción</t>
+      <t id="90100">Rendimiento</t>
+      <t id="90101">Intervalo de actualización de datos:\n número de tics de IU para reutilizar los datos de producción en caché \(menor = más reactivo, mayor = menor uso de CPU\)</t>
       <t id="90200">Gestión de errores:</t>
       <t id="90220">Ignorar errores:</t>
 

@@ -27,6 +27,8 @@
 
       <!-- settings page labels -->
       <t id="90001">Scheda Stazioni di produzione</t>
+      <t id="90100">Prestazioni</t>
+      <t id="90101">Intervallo di aggiornamento dati:\n quanti tic UI riutilizzare i dati di produzione memorizzati \(minore = più reattivo, maggiore = meno carico CPU\)</t>
       <t id="90200">Gestione degli errori:</t>
       <t id="90220">Ignora errori:</t>
 

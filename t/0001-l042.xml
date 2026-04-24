@@ -27,6 +27,8 @@
 
       <!-- settings page labels -->
       <t id="90001">Záložka Výrobní stanice</t>
+      <t id="90100">Výkon</t>
+      <t id="90101">Interval obnovy dat:\n kolik UI tiků se znovu použijí uložená data výroby \(nižší = aktuálnější, vyšší = nižší zatížení CPU\)</t>
       <t id="90200">Správa chyb:</t>
       <t id="90220">Ignorovat chyby:</t>
 

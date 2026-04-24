@@ -27,6 +27,8 @@
 
       <!-- settings page labels -->
       <t id="90001">Onglet Stations de production</t>
+      <t id="90100">Performance</t>
+      <t id="90101">Intervalle de rafraîchissement des données:\n combien de tics UI les données de production en cache sont réutilisées \(plus bas = plus réactif, plus haut = moins de charge CPU\)</t>
       <t id="90200">Gestion des erreurs :</t>
       <t id="90220">Ignorer les erreurs :</t>
 

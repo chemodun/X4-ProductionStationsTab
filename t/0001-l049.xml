@@ -27,6 +27,8 @@
 
       <!-- settings page labels -->
       <t id="90001">Produktionsstationen-Tab</t>
+      <t id="90100">Leistung</t>
+      <t id="90101">Daten-Aktualisierungsintervall:\n wie viele UI-Ticks zwischengespeicherte Produktionsdaten wiederverwendet werden \(niedriger = aktueller, höher = weniger CPU-Last\)</t>
       <t id="90200">Fehlerbehandlung:</t>
       <t id="90220">Fehler ignorieren:</t>
 

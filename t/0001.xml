@@ -27,6 +27,8 @@
 
             <!-- settings page labels -->
             <t id="90001">Production Stations Tab</t>
+            <t id="90100">Performance</t>
+            <t id="90101">Data Refresh Interval:\n how many UI ticks to reuse cached production data \(lower = more responsive, higher = lower CPU usage\)</t>
             <t id="90200">Errors Handling:</t>
             <t id="90220">Ignore errors:</t>
 
