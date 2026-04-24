@@ -25,6 +25,11 @@
       <t id="1000">Üretim istasyonu bulunamadı</t>
       <t id="1001">Mevcut filtrelere uyan istasyon yok</t>
 
+      <!-- settings page labels -->
+      <t id="90001">Üretim İstasyonları Sekmesi</t>
+      <t id="90200">Hata İşleme:</t>
+      <t id="90220">Hataları yoksay:</t>
+
     </page>
   </add>
 </diff>

@@ -25,6 +25,11 @@
       <t id="1000">Nie znaleziono stacji produkcyjnych</t>
       <t id="1001">Żadne stacje nie pasują do bieżących filtrów</t>
 
+      <!-- settings page labels -->
+      <t id="90001">Karta Stacji produkcyjnych</t>
+      <t id="90200">Obsługa błędów:</t>
+      <t id="90220">Ignoruj błędy:</t>
+
     </page>
   </add>
 </diff>

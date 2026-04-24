@@ -25,6 +25,11 @@
       <t id="1000">Nessuna stazione di produzione trovata</t>
       <t id="1001">Nessuna stazione corrisponde ai filtri attuali</t>
 
+      <!-- settings page labels -->
+      <t id="90001">Scheda Stazioni di produzione</t>
+      <t id="90200">Gestione degli errori:</t>
+      <t id="90220">Ignora errori:</t>
+
     </page>
   </add>
 </diff>

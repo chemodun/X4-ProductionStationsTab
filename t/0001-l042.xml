@@ -25,6 +25,11 @@
       <t id="1000">Nebyly nalezeny žádné výrobní stanice</t>
       <t id="1001">Žádné stanice neodpovídají aktuálním filtrům</t>
 
+      <!-- settings page labels -->
+      <t id="90001">Záložka Výrobní stanice</t>
+      <t id="90200">Správa chyb:</t>
+      <t id="90220">Ignorovat chyby:</t>
+
     </page>
   </add>
 </diff>

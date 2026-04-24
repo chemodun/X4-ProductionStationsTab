@@ -25,6 +25,11 @@
             <t id="1000">No production stations found</t>
             <t id="1001">No stations matching current filters</t>
 
+            <!-- settings page labels -->
+            <t id="90001">Production Stations Tab</t>
+            <t id="90200">Errors Handling:</t>
+            <t id="90220">Ignore errors:</t>
+
         </page>
     </add>
 </diff>

@@ -25,6 +25,11 @@
       <t id="1000">Nenhuma estação de produção encontrada</t>
       <t id="1001">Nenhuma estação corresponde aos filtros atuais</t>
 
+      <!-- settings page labels -->
+      <t id="90001">Aba Estações de produção</t>
+      <t id="90200">Tratamento de erros:</t>
+      <t id="90220">Ignorar erros:</t>
+
     </page>
   </add>
 </diff>

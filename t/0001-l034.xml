@@ -25,6 +25,11 @@
       <t id="1000">No se encontraron estaciones de producción</t>
       <t id="1001">No hay estaciones que coincidan con los filtros actuales</t>
 
+      <!-- settings page labels -->
+      <t id="90001">Pestaña Estaciones de producción</t>
+      <t id="90200">Gestión de errores:</t>
+      <t id="90220">Ignorar errores:</t>
+
     </page>
   </add>
 </diff>

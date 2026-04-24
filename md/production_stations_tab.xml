@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mdscript name="Production_Stations_Tab" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <cues>
+
+        <cue name="Init" instantiate="false" version="1">
+            <cues>
+
+                <!-- ── Config initialisation ────────────────────────────────────── -->
+                <!-- Loads player.entity.$productionStationsTab, creating it with defaults if absent. -->
+                <library name="Get_Config" purpose="include_actions" version="1">
+                    <actions>
+                        <do_if value="@player.entity.$productionStationsTab == null">
+                            <set_value name="player.entity.$productionStationsTab" exact="table[
+                $version           = 1,
+                $ignoreNoResources = false,
+                $ignoreWaitStore   = false,
+              ]" />
+                        </do_if>
+                        <set_value name="$config" exact="player.entity.$productionStationsTab" />
+                    </actions>
+                </library>
+
+                <!-- ── Options menu registration ───────────────────────────────── -->
+                <cue name="Register_Menu" instantiate="true" version="1">
+                    <conditions>
+                        <event_cue_signalled cue="md.Simple_Menu_API.Reloaded" />
+                    </conditions>
+                    <actions>
+                        <signal_cue_instantly cue="md.Simple_Menu_API.Register_Options_Menu"
+                            param="table[
+                $id      = 'production_stations_tab_options',
+                $columns = 12,
+                $title   = {1972092418, 90001},
+                $onOpen  = Options_Menu_Open,
+              ]" />
+                    </actions>
+                </cue>
+
+                <!-- ── Options menu content ─────────────────────────────────────── -->
+                <cue name="Options_Menu_Open" instantiate="true" version="1">
+                    <conditions>
+                        <event_cue_signalled />
+                    </conditions>
+                    <actions>
+                        <include_actions ref="Get_Config" />
+                        <include_actions ref="Menu_Section_ModuleErrors" />
+                        <remove_value name="$config" />
+                    </actions>
+                </cue>
+
+                <!-- ── Module Errors section ────────────────────────────────────── -->
+                <library name="Menu_Section_ModuleErrors" purpose="include_actions" version="1">
+                    <actions>
+                        <run_actions ref="Add_Title_Row">
+                            <param name="title" value="{1972092418, 90200}" />
+                        </run_actions>
+                        <!-- "Ignore errors:" label (non-selectable) -->
+                        <signal_cue_instantly cue="md.Simple_Menu_API.Add_Row" param="table[$selectable = false]" />
+                        <signal_cue_instantly cue="md.Simple_Menu_API.Make_Text"
+                            param="table[
+                $col     = 1,
+                $colSpan = 12,
+                $halign  = 'left',
+                $text    = {1972092418, 90220},
+              ]" />
+                        <!-- Two ignore checkboxes side by side -->
+                        <run_actions ref="Add_CheckBox">
+                            <param name="id" value="'ignoreNoResources'" />
+                            <param name="col" value="1" />
+                            <param name="textColSpan" value="5" />
+                            <param name="text" value="{1001, 8431}" />
+                            <param name="data" value="@$config" />
+                        </run_actions>
+                        <run_actions ref="Add_CheckBox">
+                            <param name="id" value="'ignoreWaitStore'" />
+                            <param name="col" value="7" />
+                            <param name="textColSpan" value="5" />
+                            <param name="text" value="{1001, 8432}" />
+                            <param name="data" value="@$config" />
+                        </run_actions>
+                    </actions>
+                </library>
+
+                <!-- ── Generic checkbox handler ─────────────────────────────────── -->
+                <cue name="Handle_Checkbox_Changed" instantiate="true" version="1">
+                    <conditions>
+                        <event_cue_signalled />
+                    </conditions>
+                    <actions>
+                        <include_actions ref="Get_Config" />
+                        <set_value name="$valueId" exact="event.param.$echo.$valueId" />
+                        <set_value name="$config.{@$valueId}" exact="event.param.$checked" />
+                        <remove_value name="$valueId" />
+                        <remove_value name="$config" />
+                        <raise_lua_event name="'PST.ConfigChanged'" />
+                    </actions>
+                </cue>
+
+                <!-- ── UI helper: checkbox row ───────────────────────────────────── -->
+                <library name="Add_CheckBox" purpose="run_actions">
+                    <params>
+                        <param name="id" />
+                        <param name="col" default="1" />
+                        <param name="textColSpan" default="1" />
+                        <param name="text" default="''" />
+                        <param name="data" />
+                    </params>
+                    <actions>
+                        <do_if value="@$id != null and $col? and $textColSpan? and @$text != null and @$data != null">
+                            <do_if value="@$col == 1">
+                                <signal_cue_instantly cue="md.Simple_Menu_API.Add_Row" />
+                            </do_if>
+                            <set_value name="$valueId" exact="'$%s' . [@$id]" />
+                            <signal_cue_instantly cue="md.Simple_Menu_API.Make_CheckBox"
+                                param="table[
+                  $id      = 'PST_CheckBox_%s' . [@$id],
+                  $checked = @$data.{@$valueId} == true,
+                  $col     = @$col,
+                  $colSpan = 1,
+                  $x       = 20,
+                  $width   = 'Helper.standardButtonHeight',
+                  $height  = 'Helper.standardButtonHeight',
+                  $onClick = Handle_Checkbox_Changed,
+                  $echo    = table[ $valueId = @$valueId ],
+                ]" />
+                            <signal_cue_instantly cue="md.Simple_Menu_API.Make_Text"
+                                param="table[
+                  $col     = @$col + 1,
+                  $colSpan = @$textColSpan,
+                  $halign  = 'left',
+                  $text    = @$text,
+                ]" />
+                        </do_if>
+                    </actions>
+                </library>
+
+                <!-- ── UI helper: section title row ─────────────────────────────── -->
+                <library name="Add_Title_Row" purpose="run_actions">
+                    <params>
+                        <param name="title" />
+                    </params>
+                    <actions>
+                        <signal_cue_instantly cue="md.Simple_Menu_API.Add_Row" param="table[$selectable = false]" />
+                        <signal_cue_instantly cue="md.Simple_Menu_API.Make_Text"
+                            param="table[
+                $col        = 1,
+                $colSpan    = 12,
+                $fontsize   = 'Helper.titleFontSize',
+                $titleColor = 'Color.text_normal',
+                $halign     = 'center',
+                $text       = $title,
+              ]" />
+                    </actions>
+                </library>
+
+            </cues>
+        </cue>
+
+    </cues>
+</mdscript>

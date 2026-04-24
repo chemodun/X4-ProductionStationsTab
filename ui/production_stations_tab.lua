@@ -45,11 +45,26 @@ local pst = {
   isV9                 = C.GetGameVersion().major >= 9,
   mapFontSize          = Helper.standardFontSize,
   hasSPO               = nil,   -- nil = not yet checked; true/false cached after first displayTabData
+  -- Error-highlighting options (read from MD blackboard, same keys as SPO)
+  ignoreNoResources    = false, -- when true, noRes modules are not highlighted as issues
+  ignoreWaitStore      = false, -- when true, waitStore modules are not highlighted as issues
+  playerId             = nil,   -- set in pst.Init(); used to read MD blackboard config
 }
 
 -- *** debug helpers ***
 
 local debugLevel = "none"  -- "none" | "debug" | "trace"
+
+--- Read error-ignore config from the MD-side player.entity.$productionStationsTab blackboard.
+--- Called on init and whenever any options menu control changes (PST.ConfigChanged event).
+local function pstOnConfigChanged()
+  if pst.playerId == nil then return end
+  local cfg = GetNPCBlackboard(pst.playerId, "$productionStationsTab")
+  if cfg then
+    pst.ignoreNoResources = cfg.ignoreNoResources == 1
+    pst.ignoreWaitStore   = cfg.ignoreWaitStore   == 1
+  end
+end
 
 local function debug(msg)
   if debugLevel ~= "none" then
@@ -236,10 +251,11 @@ local function getProductionStationData(component)
   addSection(1610, counts.production.noResources,   counts.production.waitStorage)
 
   return {
-    hasIssue     = hasIssue,
-    text         = table.concat(parts, "\n"),
-    moduleCounts = moduleCounts,
+    hasIssue      = hasIssue,
+    text          = table.concat(parts, "\n"),
+    moduleCounts  = moduleCounts,
     resourceWares = resourceWares,
+    counts        = counts,
   }
 end
 
@@ -363,6 +379,34 @@ end
 
 local function fmt(n)
   return ConvertIntegerString(Helper.round(n), true, 0, true, false)
+end
+
+--- Compute the effective hasIssue flag and mouseover text from raw stage counts,
+--- respecting pst.ignoreNoResources / pst.ignoreWaitStore at render time.
+local function computeStationIssue(counts)
+  local warnColor  = Helper.convertColorToText(Color["text_warning"])
+  local errColor   = Helper.convertColorToText(Color["text_error"])
+  local resetColor = "\027X"
+  local hasIssue   = false
+  local parts      = {}
+  local function addSection(titleId, noResCount, waitStoreCount)
+    local lines = {}
+    if noResCount > 0 and not pst.ignoreNoResources then
+      hasIssue = true
+      lines[#lines + 1] = "  " .. errColor .. ReadText(1001, 8431) .. " (" .. noResCount .. ")" .. resetColor
+    end
+    if waitStoreCount > 0 and not pst.ignoreWaitStore then
+      hasIssue = true
+      lines[#lines + 1] = "  " .. errColor .. ReadText(1001, 8432) .. " (" .. waitStoreCount .. ")" .. resetColor
+    end
+    if #lines > 0 then
+      parts[#parts + 1] = warnColor .. ReadText(1001, titleId) .. ":" .. resetColor
+                       .. "\n" .. table.concat(lines, "\n")
+    end
+  end
+  addSection(6100, counts.intermediate.noResources, counts.intermediate.waitStorage)
+  addSection(1610, counts.production.noResources,   counts.production.waitStorage)
+  return hasIssue, table.concat(parts, "\n")
 end
 
 local function formatProductionTotal(v)
@@ -520,15 +564,23 @@ local function createStationRow(instance, ftable, tblOrGroup, stationId, station
   -- "covered" indicator (mirrors vanilla alertString)
   local isPlayerOwned = GetComponentData(stationId, "isplayerowned")
 
-  local hasIssue = stationData and stationData.hasIssue
+  local hasIssue, issueText = false, ""
+  if stationData then
+    if stationData.counts then
+      hasIssue, issueText = computeStationIssue(stationData.counts)
+    else
+      hasIssue  = stationData.hasIssue or false
+      issueText = stationData.text     or ""
+    end
+  end
 
   -- Issue text goes into the mouseover, appended after any vanilla mouseover text
   local issueMouseover = mouseover
-  if stationData.text and stationData.text ~= "" then
+  if issueText ~= "" then
     if issueMouseover ~= "" then
       issueMouseover = issueMouseover .. "\n\n"
     end
-    issueMouseover = issueMouseover .. stationData.text
+    issueMouseover = issueMouseover .. issueText
   end
 
   -- When station has issues: tint only the embedded icon in the name with warning colour
@@ -669,7 +721,8 @@ local function createStationRow(instance, ftable, tblOrGroup, stationId, station
               end
             end
             -- Build issue colour and mouseover for the ware cell
-            local wareHasIssue = entry.noRes > 0 or entry.waitStore > 0
+            local wareHasIssue = (entry.noRes > 0 and not pst.ignoreNoResources) or
+                                  (entry.waitStore > 0 and not pst.ignoreWaitStore)
             local wareName = wareHasIssue
               and (Helper.convertColorToText(Color["text_warning"]) .. entry.name .. "\027X")
               or entry.name
@@ -678,10 +731,10 @@ local function createStationRow(instance, ftable, tblOrGroup, stationId, station
               local errColor   = Helper.convertColorToText(Color["text_error"])
               local resetColor = "\027X"
               local lines = {}
-              if entry.noRes > 0 then
+              if entry.noRes > 0 and not pst.ignoreNoResources then
                 lines[#lines + 1] = errColor .. ReadText(1001, 8431) .. " (" .. entry.noRes .. ")" .. resetColor
               end
-              if entry.waitStore > 0 then
+              if entry.waitStore > 0 and not pst.ignoreWaitStore then
                 lines[#lines + 1] = errColor .. ReadText(1001, 8432) .. " (" .. entry.waitStore .. ")" .. resetColor
               end
               wareMouseover = table.concat(lines, "\n")
@@ -838,15 +891,14 @@ function pst.Init(menuMap)
   pst.menuMapConfig = menuMap.uix_getConfig()
   pst.mapFontSize   = Helper.scaleFont(Helper.standardFont, pst.menuMapConfig.mapFontSize)
 
-  menuMap.registerCallback(
-    "createPropertyOwned_on_every_playerobject",
-    pst.onEveryPlayerObject)
-  menuMap.registerCallback(
-    "createPropertyOwned_on_add_other_objects_infoTableData",
-    pst.prepareTabData)
-  menuMap.registerCallback(
-    "createPropertyOwned_on_createPropertySection_unassignedships",
-    pst.displayTabData)
+  -- Options: read initial config and register for live updates via MD event.
+  pst.playerId = ConvertStringTo64Bit(tostring(C.GetPlayerID()))
+  RegisterEvent("PST.ConfigChanged", pstOnConfigChanged)
+  pstOnConfigChanged()
+
+  menuMap.registerCallback("createPropertyOwned_on_every_playerobject", pst.onEveryPlayerObject)
+  menuMap.registerCallback("createPropertyOwned_on_add_other_objects_infoTableData", pst.prepareTabData)
+  menuMap.registerCallback("createPropertyOwned_on_createPropertySection_unassignedships", pst.displayTabData)
 
   pst.setupTab()
 end

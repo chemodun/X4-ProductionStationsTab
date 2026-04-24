@@ -25,6 +25,11 @@
       <t id="1000">Keine Produktionsstationen gefunden</t>
       <t id="1001">Keine Stationen entsprechen den aktuellen Filtern</t>
 
+      <!-- settings page labels -->
+      <t id="90001">Produktionsstationen-Tab</t>
+      <t id="90200">Fehlerbehandlung:</t>
+      <t id="90220">Fehler ignorieren:</t>
+
     </page>
   </add>
 </diff>
