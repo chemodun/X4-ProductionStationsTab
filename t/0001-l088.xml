@@ -6,6 +6,7 @@
       <!-- mod identity -->
       <t id="1">生產站</t>
       <t id="2">顯示擁有生產模組與儲存狀態的玩家所屬站點。</t>
+      <t id="10">Production Stations Tab</t>
 
       <!-- column headers -->
       <t id="110">貨物</t>
@@ -31,6 +32,8 @@
       <t id="90101">資料更新間隔:\n 快取生產資料重複使用的 UI 計時數 \(越低越即時，越高越省 CPU\)</t>
       <t id="90200">錯誤處理:</t>
       <t id="90220">忽略錯誤:</t>
+      <t id="90300">互操作性</t>
+      <t id="90301">與Station Production Overview同步</t>
 
     </page>
   </add>

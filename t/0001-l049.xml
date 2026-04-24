@@ -6,6 +6,7 @@
       <!-- mod identity -->
       <t id="1">Produktionsstationen</t>
       <t id="2">Zeigt eigene Stationen mit Produktionsmodulen und Lagerstatus an.</t>
+      <t id="10">Production Stations Tab</t>
 
       <!-- column headers -->
       <t id="110">Ware</t>
@@ -31,6 +32,8 @@
       <t id="90101">Daten-Aktualisierungsintervall:\n wie viele UI-Ticks zwischengespeicherte Produktionsdaten wiederverwendet werden \(niedriger = aktueller, höher = weniger CPU-Last\)</t>
       <t id="90200">Fehlerbehandlung:</t>
       <t id="90220">Fehler ignorieren:</t>
+      <t id="90300">Interoperabilität</t>
+      <t id="90301">Mit Station Production Overview synchronisieren</t>
 
     </page>
   </add>

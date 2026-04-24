@@ -6,6 +6,7 @@
       <!-- mod identity -->
       <t id="1">Stazioni di produzione</t>
       <t id="2">Mostra le stazioni del giocatore con moduli di produzione e stato dello stoccaggio.</t>
+      <t id="10">Production Stations Tab</t>
 
       <!-- column headers -->
       <t id="110">Merce</t>
@@ -31,6 +32,8 @@
       <t id="90101">Intervallo di aggiornamento dati:\n quanti tic UI riutilizzare i dati di produzione memorizzati \(minore = più reattivo, maggiore = meno carico CPU\)</t>
       <t id="90200">Gestione degli errori:</t>
       <t id="90220">Ignora errori:</t>
+      <t id="90300">Interoperabilità</t>
+      <t id="90301">Sincronizza con Station Production Overview</t>
 
     </page>
   </add>

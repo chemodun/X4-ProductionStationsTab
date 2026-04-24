@@ -6,6 +6,7 @@
       <!-- mod identity -->
       <t id="1">Stations de production</t>
       <t id="2">Affiche les stations du joueur avec modules de production et état du stockage.</t>
+      <t id="10">Production Stations Tab</t>
 
       <!-- column headers -->
       <t id="110">Marchandise</t>
@@ -31,6 +32,8 @@
       <t id="90101">Intervalle de rafraîchissement des données:\n combien de tics UI les données de production en cache sont réutilisées \(plus bas = plus réactif, plus haut = moins de charge CPU\)</t>
       <t id="90200">Gestion des erreurs :</t>
       <t id="90220">Ignorer les erreurs :</t>
+      <t id="90300">Interopérabilité</t>
+      <t id="90301">Synchroniser avec Station Production Overview</t>
 
     </page>
   </add>

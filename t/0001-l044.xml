@@ -6,6 +6,7 @@
             <!-- mod identity -->
             <t id="1">Production Stations</t>
             <t id="2">Shows player-owned stations with production modules and storage status.</t>
+            <t id="10">Production Stations Tab</t>
 
             <!-- column headers -->
             <t id="110">Ware</t>
@@ -31,6 +32,8 @@
             <t id="90101">Data Refresh Interval:\n how many UI ticks to reuse cached production data \(lower = more responsive, higher = lower CPU usage\)</t>
             <t id="90200">Errors Handling:</t>
             <t id="90220">Ignore errors:</t>
+            <t id="90300">Interoperability</t>
+            <t id="90301">Sync with Station Production Overview</t>
 
         </page>
     </add>

@@ -6,6 +6,7 @@
       <!-- mod identity -->
       <t id="1">Stacje produkcyjne</t>
       <t id="2">Wyświetla stacje gracza z modułami produkcyjnymi i stanem magazynu.</t>
+      <t id="10">Production Stations Tab</t>
 
       <!-- column headers -->
       <t id="110">Towar</t>
@@ -31,6 +32,8 @@
       <t id="90101">Interwał odświeżania danych:\n ile tyknięć UI dane produkcji są ponownie używane \(mniejszy = bardziej responsywny, większy = mniejsze użycie CPU\)</t>
       <t id="90200">Obsługa błędów:</t>
       <t id="90220">Ignoruj błędy:</t>
+      <t id="90300">Interoperacyjność</t>
+      <t id="90301">Synchronizuj z Station Production Overview</t>
 
     </page>
   </add>

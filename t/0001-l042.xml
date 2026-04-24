@@ -6,6 +6,7 @@
       <!-- mod identity -->
       <t id="1">Výrobní stanice</t>
       <t id="2">Zobrazuje hráčovy stanice s výrobními moduly a stavem skladu.</t>
+      <t id="10">Production Stations Tab</t>
 
       <!-- column headers -->
       <t id="110">Zboží</t>
@@ -31,6 +32,8 @@
       <t id="90101">Interval obnovy dat:\n kolik UI tiků se znovu použijí uložená data výroby \(nižší = aktuálnější, vyšší = nižší zatížení CPU\)</t>
       <t id="90200">Správa chyb:</t>
       <t id="90220">Ignorovat chyby:</t>
+      <t id="90300">Interoperabilita</t>
+      <t id="90301">Synchronizovat s Station Production Overview</t>
 
     </page>
   </add>

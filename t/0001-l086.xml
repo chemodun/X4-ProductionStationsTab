@@ -6,6 +6,7 @@
       <!-- mod identity -->
       <t id="1">生产站</t>
       <t id="2">显示拥有生产模块和库存状态的玩家所属站点。</t>
+      <t id="10">Production Stations Tab</t>
 
       <!-- column headers -->
       <t id="110">货物</t>
@@ -31,6 +32,8 @@
       <t id="90101">数据刷新间隔:\n 缓存生产数据重复使用的 UI 时钟数 \(越低越实时，越高越省 CPU\)</t>
       <t id="90200">错误处理:</t>
       <t id="90220">忽略错误:</t>
+      <t id="90300">互操作性</t>
+      <t id="90301">与Station Production Overview同步</t>
 
     </page>
   </add>
