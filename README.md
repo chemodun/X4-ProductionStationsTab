@@ -11,8 +11,10 @@ Adds a **Production Stations** tab to the **Property Owned** menu in the map (th
 - **Production issue indicators**: If any production modules for a ware are waiting for resources or waiting for storage, the ware name is highlighted in warning colour and a mouseover tooltip lists the exact issue counts per state.
 - **Active module count**: The module count column shows how many modules are currently running out of the total installed (e.g. `3/5`).
 - **Ware grouping**: Wares are grouped into **Products** (not consumed on-site), **Intermediates** (produced and consumed on-site), and **Resources** (pure inputs, not produced on-site).
-- **Logical Station Overview button**: Opens the Logical Station Overview for inventory and build plan details. Tinted in warning colour when the station has production issues.
-- **Quick-navigation buttons**: *Configure Station* and *Transaction Log* buttons are available on each station row.
+- **Quick-navigation buttons**: *Configure Station*,  *Station Overview* and *Transaction Log* icons are available on each station row.
+- **Configurable data refresh**: Slider in options which sets the cache duration in UI ticks (1-10, default 3).
+- **Error handling options**: Options to show production issues as sub-rows instead of tooltips, and to ignore specific module states when identifying issues.
+- **Interoperability option**: Option to synchronize data refresh interval and error handling settings with the `Station Production Overview` mod (if installed).
 - **Supports the 9.00 beta**: Compatible with both 8.00 and 9.00 versions of the game.
 
 ## Requirements
@@ -26,8 +28,8 @@ Adds a **Production Stations** tab to the **Property Owned** menu in the map (th
 
 ## Installation
 
-- **Steam Workshop**: [Station Production Overview](https://steamcommunity.com/sharedfiles/filedetails/?id=3697064149)
-- **Nexus Mods**: [Station Production Overview](https://www.nexusmods.com/x4foundations/mods/2052)
+- **Steam Workshop**: [Production Stations Tab](https://steamcommunity.com/sharedfiles/filedetails/?id=3697064149)
+- **Nexus Mods**: [Production Stations Tab](https://www.nexusmods.com/x4foundations/mods/2052)
 
 ## Usage
 
@@ -68,6 +70,22 @@ On a line with `Production Overview` header in a right-side can be shown an icon
 
 ![Station Production Overview on a right-side panel](docs/images/stations_production_overview.png)
 
+### Extensions options
+
+**Options Menu > Extension options > Production Stations Tab**:
+
+- **Data Refresh Interval** (1-10, default 3): UI ticks to reuse cached data before recomputing. Lower = more responsive, higher = less CPU.
+- **Ignore errors**:
+  - **Modules without resources**: if checked, this module state is ignored when identifying production issues,
+  - **Modules waiting for storage**: if checked, this module state is ignored when identifying production issues.
+- **Synchronize with Station Production Overview**: if enabled, the data refresh interval and error handling settings are kept in sync between this mod and the `Station Production Overview` mod (if installed).
+
+![Extension options](docs/images/options.png)
+
+## Video
+
+- [Station Production Overview and Production Stations Tab interoperability setting and usage](https://www.youtube.com/watch?v=f0apJSuumY0)
+
 ## Credits
 
 - **Author**: Chem O`Dun, on [Nexus Mods](https://next.nexusmods.com/profile/ChemODun/mods?gameId=2659) and [Steam Workshop](https://steamcommunity.com/id/chemodun/myworkshopfiles/?appid=392160)
@@ -80,6 +98,13 @@ On a line with `Production Overview` header in a right-side can be shown an icon
 - [SirNukes](https://next.nexusmods.com/profile/sirnukes?gameId=2659) - for the `Mod Support APIs` that power the UI hooks.
 
 ## Changelog
+
+### [8.00.05] - 2026-04-26
+
+- **Added**
+  - New option to set refresh interval.
+  - New option to ignore modules without resources and/or modules waiting for storage when identifying production issues.
+  - New option to synchronize data refresh interval and error handling settings with the `Station Production Overview` mod (if installed).
 
 ### [8.00.04] - 2026-04-03
 
