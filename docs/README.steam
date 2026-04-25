@@ -11,8 +11,10 @@ Adds a [b]Production Stations[/b] tab to the [b]Property Owned[/b] menu in the m
 [*] [b]Production issue indicators[/b]: If any production modules for a ware are waiting for resources or waiting for storage, the ware name is highlighted in warning colour and a mouseover tooltip lists the exact issue counts per state.
 [*] [b]Active module count[/b]: The module count column shows how many modules are currently running out of the total installed (e.g. [b]3/5[/b]).
 [*] [b]Ware grouping[/b]: Wares are grouped into [b]Products[/b] (not consumed on-site), [b]Intermediates[/b] (produced and consumed on-site), and [b]Resources[/b] (pure inputs, not produced on-site).
-[*] [b]Logical Station Overview button[/b]: Opens the Logical Station Overview for inventory and build plan details. Tinted in warning colour when the station has production issues.
-[*] [b]Quick-navigation buttons[/b]: [i]Configure Station[/i] and [i]Transaction Log[/i] buttons are available on each station row.
+[*] [b]Quick-navigation buttons[/b]: [i]Configure Station[/i],  [i]Station Overview[/i] and [i]Transaction Log[/i] icons are available on each station row.
+[*] [b]Configurable data refresh[/b]: Slider in options which sets the cache duration in UI ticks (1-10, default 3).
+[*] [b]Error handling options[/b]: Options to show production issues as sub-rows instead of tooltips, and to ignore specific module states when identifying issues.
+[*] [b]Interoperability option[/b]: Option to synchronize data refresh interval and error handling settings with the [b]Station Production Overview[/b] mod (if installed).
 [*] [b]Supports the 9.00 beta[/b]: Compatible with both 8.00 and 9.00 versions of the game.
 [/list]
 [h2][b]Requirements[/b][/h2]
@@ -30,8 +32,8 @@ Adds a [b]Production Stations[/b] tab to the [b]Property Owned[/b] menu in the m
 [/list]
 [h2][b]Installation[/b][/h2]
 [list]
-[*] [b]Steam Workshop[/b]: [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3697064149]Station Production Overview[/url]
-[*] [b]Nexus Mods[/b]: [url=https://www.nexusmods.com/x4foundations/mods/2052]Station Production Overview[/url]
+[*] [b]Steam Workshop[/b]: [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3697064149]Production Stations Tab[/url]
+[*] [b]Nexus Mods[/b]: [url=https://www.nexusmods.com/x4foundations/mods/2052]Production Stations Tab[/url]
 [/list]
 [h2][b]Usage[/b][/h2]
 
@@ -72,6 +74,25 @@ On a line with [b]Production Overview[/b] header in a right-side can be shown an
 
 [img]https://raw.githubusercontent.com/chemodun/X4-ProductionStationsTab/refs/heads/main/docs/images/stations_production_overview.png[/img]
 
+[h2]Extensions options[/h2]
+
+[b]Options Menu > Extension options > Production Stations Tab[/b]:
+[list]
+[*] [b]Data Refresh Interval[/b] (1-10, default 3): UI ticks to reuse cached data before recomputing. Lower = more responsive, higher = less CPU.
+[*] [b]Ignore errors[/b]:
+[list]
+[*] [b]Modules without resources[/b]: if checked, this module state is ignored when identifying production issues,
+[*] [b]Modules waiting for storage[/b]: if checked, this module state is ignored when identifying production issues.
+[/list]
+[*] [b]Synchronize with Station Production Overview[/b]: if enabled, the data refresh interval and error handling settings are kept in sync between this mod and the [b]Station Production Overview[/b] mod (if installed).
+[/list]
+[img]https://raw.githubusercontent.com/chemodun/X4-ProductionStationsTab/refs/heads/main/docs/images/options.png[/img]
+
+[h2][b]Video[/b][/h2]
+[list]
+[*] Station Production Overview and Production Stations Tab interoperability setting and usage
+[previewyoutube=f0apJSuumY0;full][/previewyoutube]
+[/list]
 [h2][b]Credits[/b][/h2]
 [list]
 [*] [b]Author[/b]: Chem O`Dun, on [url=https://next.nexusmods.com/profile/ChemODun/mods?gameId=2659]Nexus Mods[/url] and [url=https://steamcommunity.com/id/chemodun/myworkshopfiles/?appid=392160]Steam Workshop[/url]
@@ -85,6 +106,15 @@ On a line with [b]Production Overview[/b] header in a right-side can be shown an
 [/list]
 [h2][b]Changelog[/b][/h2]
 
+[h2][8.00.05] - 2026-04-26[/h2]
+[list]
+[*] [b]Added[/b]
+[list]
+[*] New option to set refresh interval.
+[*] New option to ignore modules without resources and/or modules waiting for storage when identifying production issues.
+[*] New option to synchronize data refresh interval and error handling settings with the [b]Station Production Overview[/b] mod (if installed).
+[/list]
+[/list]
 [h2][8.00.04] - 2026-04-03[/h2]
 [list]
 [*] [b]Added[/b]
