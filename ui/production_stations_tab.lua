@@ -567,15 +567,15 @@ local function createStationRow(instance, ftable, tblOrGroup, stationId, station
     isStationExpandable = C.GetNumStationModules(comp64, true, false) > 0
   end
   local isExpandable = isStationExpandable
-                    or (subordinates.hasRendered and subordinateFound)
-                    or (#dockedShips > 0)
-                    or (#constructions > 0)
+      or (subordinates.hasRendered and subordinateFound)
+      or (#dockedShips > 0)
+      or (#constructions > 0)
 
   numdisplayed = numdisplayed + 1
 
   -- Name / colour / sector
   local name, color, bgColor, font, mouseover, factionColor =
-    menu.getContainerNameAndColors(stationId, 0, true, false, true)
+      menu.getContainerNameAndColors(stationId, 0, true, false, true)
   local sectorId, locationText = GetComponentData(stationId, "sectorid", "sector")
 
   -- "covered" indicator (mirrors vanilla alertString)
@@ -609,7 +609,7 @@ local function createStationRow(instance, ftable, tblOrGroup, stationId, station
   end
 
   local displayText = Helper.convertColorToText(color) .. displayName .. "\027X"
-                   .. "\n" .. (locationText or "")
+      .. "\n" .. (locationText or "")
 
   -- Main row
   local row = tblOrGroup:addRow({"property", stationId, nil, 0}, {
@@ -631,7 +631,7 @@ local function createStationRow(instance, ftable, tblOrGroup, stationId, station
   end
 
   -- Col 2: two-line text (name / sector), issue details in mouseover
-  row[2]:setColSpan(maxIcons - 2):createText(displayText, { font = font, mouseOverText = issueMouseover })
+  row[2]:setColSpan(3):createText(displayText, { font = font, mouseOverText = issueMouseover })
 
   -- Sync expand-button height to text height
   local rowHeight = row[2]:getMinTextHeight(true)
@@ -639,43 +639,47 @@ local function createStationRow(instance, ftable, tblOrGroup, stationId, station
     row[1].properties.height = rowHeight
   end
 
-  -- Col (maxicons), span 2: Station Configuration button
-  local cfgCell = row[maxIcons]
-  cfgCell:setColSpan(2)
-  local cellWidth = cfgCell:getWidth()
-  local iconSize  = math.min(cellWidth, rowHeight)
-  local iconX     = (cellWidth  - iconSize) / 2
-  local iconY     = (rowHeight  - iconSize) / 2
-  cfgCell:createButton({ mouseOverText = ReadText(1001, 7902), scaling = false, active = isPlayerOwned })
-         :setIcon("mapst_plotmanagement", { scaling = false, width = iconSize, height = iconSize, x = iconX, y = iconY })
-  cfgCell.handlers.onClick = function()
-    Helper.closeMenuAndOpenNewMenu(pst.menuMap, "StationConfigurationMenu", { 0, 0, comp64 })
-    pst.menuMap.cleanup()
-  end
-  cfgCell.properties.height = rowHeight
+  if maxIcons >= 1 then
+    -- Col (5), span 2: Station Configuration button
+    local cfgCell = row[5]
+    cfgCell:setColSpan(2)
+    local cellWidth = cfgCell:getWidth()
+    local iconSize  = math.min(cellWidth, rowHeight)
+    local iconX     = (cellWidth  - iconSize) / 2
+    local iconY     = (rowHeight  - iconSize) / 2
+    cfgCell:createButton({ mouseOverText = ReadText(1001, 7902), scaling = false, active = isPlayerOwned })
+          :setIcon("mapst_plotmanagement", { scaling = false, width = iconSize, height = iconSize, x = iconX, y = iconY })
+    cfgCell.handlers.onClick = function()
+      Helper.closeMenuAndOpenNewMenu(pst.menuMap, "StationConfigurationMenu", { 0, 0, comp64 })
+      pst.menuMap.cleanup()
+    end
+    cfgCell.properties.height = rowHeight
+    if maxIcons >= 3 then
+      -- Col (5+2), span 2: Logical Station Overview button
+      local lsoCell = row[7]
+      lsoCell:setColSpan(2)
+      lsoCell:createButton({ mouseOverText = ReadText(1001, 7903), scaling = false })
+          :setIcon("stationbuildst_lsov", { scaling = false, width = iconSize, height = iconSize, x = iconX, y = iconY, color = hasIssue and Color["text_warning"] or nil })
+      lsoCell.handlers.onClick = function()
+        Helper.closeMenuAndOpenNewMenu(pst.menuMap, "StationOverviewMenu", { 0, 0, comp64 })
+        pst.menuMap.cleanup()
+      end
+      lsoCell.properties.height = rowHeight
 
-  -- Col (maxicons+2), span 2: Logical Station Overview button
-  local lsoCell = row[maxIcons + 2]
-  lsoCell:setColSpan(2)
-  lsoCell:createButton({ mouseOverText = ReadText(1001, 7903), scaling = false })
-         :setIcon("stationbuildst_lsov", { scaling = false, width = iconSize, height = iconSize, x = iconX, y = iconY, color = hasIssue and Color["text_warning"] or nil })
-  lsoCell.handlers.onClick = function()
-    Helper.closeMenuAndOpenNewMenu(pst.menuMap, "StationOverviewMenu", { 0, 0, comp64 })
-    pst.menuMap.cleanup()
+      if maxIcons >= 5 then
+        -- Col (5+4), span 2: Transaction Log button
+        local txCell = row[9]
+        txCell:setColSpan(2)
+        txCell:createButton({ mouseOverText = ReadText(1001, 7702), scaling = false, active = isPlayerOwned })
+            :setIcon("pi_transactionlog", { scaling = false, width = iconSize, height = iconSize, x = iconX, y = iconY })
+        txCell.handlers.onClick = function()
+          Helper.closeMenuAndOpenNewMenu(pst.menuMap, "TransactionLogMenu", { 0, 0, comp64 })
+          pst.menuMap.cleanup()
+        end
+        txCell.properties.height = rowHeight
+      end
+    end
   end
-  lsoCell.properties.height = rowHeight
-
-  -- Col (maxicons+4), span 2: Transaction Log button
-  local txCell = row[maxIcons + 4]
-  txCell:setColSpan(2)
-  txCell:createButton({ mouseOverText = ReadText(1001, 7702), scaling = false, active = isPlayerOwned })
-        :setIcon("pi_transactionlog", { scaling = false, width = iconSize, height = iconSize, x = iconX, y = iconY })
-  txCell.handlers.onClick = function()
-    Helper.closeMenuAndOpenNewMenu(pst.menuMap, "TransactionLogMenu", { 0, 0, comp64 })
-    pst.menuMap.cleanup()
-  end
-  txCell.properties.height = rowHeight
-
   -- *** Expansion ***
   if menu.isPropertyExtended(key) then
     -- Production Overview sub-section (expandable, before module list)
@@ -697,7 +701,7 @@ local function createStationRow(instance, ftable, tblOrGroup, stationId, station
       local spoIconX  = (spoCellW  - spoIconSz) / 2
       local spoIconY  = (poRowH    - spoIconSz) / 2
       spoCell:createButton({ mouseOverText = ReadText(1972092416, 2), scaling = false })
-             :setIcon(TAB_ICON, { scaling = false, width = spoIconSz, height = spoIconSz, x = spoIconX, y = spoIconY })
+          :setIcon(TAB_ICON, { scaling = false, width = spoIconSz, height = spoIconSz, x = spoIconX, y = spoIconY })
       spoCell.handlers.onClick = function()
         menu.infoSubmenuObject = comp64
         menu.infoMode["right"] = SPO_CATEGORY
